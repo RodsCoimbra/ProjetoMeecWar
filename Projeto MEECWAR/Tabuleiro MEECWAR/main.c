@@ -30,12 +30,47 @@ void tabu(){
 int main(int argc, char *argv[])
 {   int opt;
     int opterr = 0;
-    while((opt= getopt(argc, argv,"t:"))!= -1 ){
+    while((opt= getopt(argc, argv,"t:"))!= -1 ){                
         switch (opt){
         case 't':
-        sscanf(optarg,"%dx%d", &linha, &resc);
+            sscanf(optarg,"%dx%d", &linha, &resc);
         break;
-        default{  //muda isto
+        case 'h':
+            help(argv[0]);
+            return 0;  //acho que não é necessário
+        break;
+        case 'j': //modo de jogo
+        break;                  
+        case 'p':
+        break;
+        case 'd':
+        break;
+        case '1':
+        sscanf(optarg, "%d", peças1);
+        break;
+        case '2':
+        sscanf(optarg, "%d", peças2);
+        break;
+        case '3':
+        sscanf(optarg, "%d", peças3);
+        break;
+        case '4':
+        sscanf(optarg, "%d", peças4);
+        break;
+        case '5':
+        sscanf(optarg, "%d", peças5);
+        break;
+        case '6':
+        sscanf(optarg, "%d", peças6);
+        break;
+        case '7':
+        sscanf(optarg, "%d", peças7);
+        break;
+        case '8':
+        sscanf(optarg, "%d", peças8);
+        break;
+        default{
+            printf("Carater %c não identificado", optopt);
 
         }
         }
@@ -83,4 +118,12 @@ void camada()
                 }
         }
     }
+}
+
+void help (char *?????????){     //colocar as intruções para usar os comandos
+    printf("");
+    printf("");
+    printf("");
+    printf("");
+    printf("");
 }
