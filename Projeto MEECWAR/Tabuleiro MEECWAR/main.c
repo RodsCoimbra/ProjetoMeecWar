@@ -47,16 +47,6 @@ void camada(int linha2,int coluna2, int peca){
     }
 }
 
-void modo_p1(){
-        int l,j;//variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento
-        srand(time(NULL));
-        for (l=resl; l >= 1; l-=3){
-            for(j= 1; j < resc; j+=3){
-            barco(bar[rand() % 3],l,j);
-            }
-        }
-}
-
 void barco(int ref, int l, int j){
 if(contador == 3){
       ref = 0;}
@@ -81,6 +71,25 @@ if(contador == 3){
     }
     else{
 }
+}
+
+void modo_p1(){
+        int l,j;//variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento
+
+        srand(time(NULL));
+        for (l=resl; l >= 1; l-=3){
+            for(j= 1; j < resc; j+=3){
+            barco(bar[rand() % 3],l,j);
+            }
+        }
+}
+
+ void help (char *zzz){     //colocar as intruções para usar os comandos
+    printf("");
+    printf("");
+    printf("");
+    printf("");
+    printf("");
 }
 
 int main(int argc, char *argv[]){   int opt, modo;
@@ -158,10 +167,3 @@ int main(int argc, char *argv[]){   int opt, modo;
 }
 
 
- void help (char zzz){     //colocar as intruções para usar os comandos
-    printf("");
-    printf("");
-    printf("");
-    printf("");
-    printf("");
-}
