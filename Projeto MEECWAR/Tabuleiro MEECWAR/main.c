@@ -163,6 +163,7 @@ int main(int argc, char *argv[]){   int opt, modo;
     if (modop==1){
     modo_p1();
     }
+                                 
     tabu();
 }
 
