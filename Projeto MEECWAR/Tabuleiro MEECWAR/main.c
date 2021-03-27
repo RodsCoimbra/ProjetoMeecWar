@@ -50,7 +50,7 @@ if(contador == 3){
     if(ref==0){
         contador = 0;
     }
-    if(ref==1){
+    else if(ref==1){
         if(camada2[l][j] == 0){
             camada(l, j, 1);
             contador = 0;
