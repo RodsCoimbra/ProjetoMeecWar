@@ -6,9 +6,6 @@
 int linha =9, coluna=1, resl, resc = 9, i, modop=1, pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, camada2[16][25], contador = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
-int bar [3]={0,1,42}; //array que conterá todos as referências de barcos
-
-
 
 
 void tabu(){
@@ -49,7 +46,7 @@ void camada(int linha2,int coluna2, int peca){
 
 void barco(int ref, int l, int j){
 if(contador == 3){
-      ref = 0;}
+      ref = 5;}
     if(ref==0){
         contador = 0;
     }
@@ -59,7 +56,7 @@ if(contador == 3){
             contador = 0;
         }
         else{contador++;
-            barco(bar[rand() % 3],l,j);}
+            barco(rand() % 43,l,j);}
     }
     else if(ref==42){
         if(camada2[l-2][j]== 0 && camada2[l-1][j]== 0 && camada2[l][j]== 0 && camada2[l-2][j+1] == 0 && camada2[l][j+1]== 0 && camada2[l-2][j+2] == 0 && camada2[l-1][j+2]== 0 && camada2[l][j+2]== 0){
@@ -67,7 +64,7 @@ if(contador == 3){
             contador = 0;
         }
         else{contador++;
-            barco(bar[rand() % 3],l,j);}
+            barco(rand() % 43,l,j);}
     }
     else{
 }
@@ -79,7 +76,7 @@ void modo_p1(){
         srand(time(NULL));
         for (l=resl; l >= 1; l-=3){
             for(j= 1; j < resc; j+=3){
-            barco(bar[rand() % 3],l,j);
+            barco(rand() % 43,l,j);
             }
         }
 }
@@ -138,7 +135,7 @@ int main(int argc, char *argv[]){   int opt, modo;
             printf("Carater %c nao identificado", optopt);
         }
     }
-
+    system("color 10");
     }
     if((linha%3) !=0 || (resc%3 != 0) || (linha < 9) || (linha > 15) || (resc < 9) || (resc> 24)){ //caso em que não são verificadas as condições corretas para criar o tabuleiro
         printf("Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24 \n");
@@ -163,7 +160,6 @@ int main(int argc, char *argv[]){   int opt, modo;
     if (modop==1){
     modo_p1();
     }
-                                 
     tabu();
 }
 
