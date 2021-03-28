@@ -55,6 +55,10 @@ else{
             camada(l, j, 1);        //Chama a função camada com as coordenadas da peça e com o identificador da peça
             return 1; }}              //retorna 1 para acabar e para parar o while na função modo_p1.
     //O resto das peças seguirá o mesmo padrão da primeira
+
+    ///resto das peças 1 aqui
+
+
     else if(ref==10){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0){
             camada(l, j, 2); camada(l, j+1, 2);
@@ -85,6 +89,85 @@ else{
             camada(l-2, j+1, 2); camada(l-2, j+2, 2);
             return 1; }}
 
+    else if(ref==16){
+        if(camada2[l][j] == 0 && camada2[l-1][j] == 0){
+            camada(l, j, 2); camada(l-1, j, 2);
+            return 1; }}
+
+    else if(ref==17){
+        if(camada2[l-1][j] == 0 && camada2[l-2][j] == 0){
+            camada(l-1, j, 2); camada(l-2, j, 2);
+            return 1; }}
+
+    else if(ref==18){
+        if(camada2[l][j+1] == 0 && camada2[l-1][j+1] == 0){
+            camada(l, j+1, 2); camada(l-1, j+1, 2);
+            return 1; }}
+
+    else if(ref==19){
+        if(camada2[l-1][j+1] == 0 && camada2[l-2][j+1] == 0){
+            camada(l-1, j+1, 2); camada(l-2, j+1, 2);
+            return 1; }}
+
+    else if(ref==20){
+        if(camada2[l][j+2] == 0 && camada2[l-1][j+2] == 0){
+            camada(l, j+2, 2); camada(l-1, j+2, 2);
+            return 1; }}
+
+    else if(ref==21){
+        if(camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0){
+            camada(l-1, j+2, 2); camada(l-2, j+2, 2);
+            return 1; }}
+
+   ///peças do número 3 aqui
+
+
+    else if(ref==28){
+        if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0){
+            camada(l, j, 4); camada(l, j+1, 4); camada(l-1, j, 4); camada(l-1, j+1, 4);
+            return 1; }}
+
+    else if(ref==29){
+        if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0){
+            camada(l, j+1, 4); camada(l, j+2, 4); camada(l-1, j+1, 4); camada(l-1, j+2, 4);
+            return 1; }}
+
+    else if(ref==30){
+        if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
+            camada(l-1, j, 4); camada(l-1, j+1, 4); camada(l-2, j, 4); camada(l-2, j+1, 4);
+            return 1; }}
+
+    else if(ref==31){
+        if(camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
+            camada(l-1, j+1, 4); camada(l-1, j+2, 4); camada(l-2, j+1, 4); camada(l-2, j+2, 4);
+            return 1; }}
+
+    ///peças do num 5 aqui
+
+    else if(ref==36){
+        if(camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
+            camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6); camada(l-2, j+2, 6);
+            return 1; }}
+
+    else if(ref==37){
+        if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
+            camada(l, j+1, 6); camada(l, j+2, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j+1, 6); camada(l-2, j+2, 6);
+            return 1; }}
+
+    else if(ref==38){
+        if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0){
+            camada(l, j, 6); camada(l, j+1, 6); camada(l, j+2, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j+1, 6);
+            return 1; }}
+
+    else if(ref==39){
+        if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
+            camada(l, j, 6); camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6);
+            return 1; }}
+
+
+    ///peças num 7 aqui
+
+
     else if(ref==42){
         if(camada2[l-2][j]== 0 && camada2[l-1][j]== 0 && camada2[l][j]== 0 && camada2[l-2][j+1] == 0 && camada2[l][j+1]== 0 && camada2[l-2][j+2] == 0 && camada2[l-1][j+2]== 0 && camada2[l][j+2]== 0){
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
@@ -101,10 +184,10 @@ void modo_p1(){
             for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
             contador = 0;                       //reset do contador para 0
             posi = barco(rand() % 43,l,j);      //posi é igual a 1 ou 0 dependendo da funcao barco. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
-            ///Caso queiras testar uma peça podes substituir em cima o rand() % 43, pela referencia do barco e assim ele só imprime esse barco no tabuleiro.
+            ///Caso queiras testar uma peça podes substituir em cima o rand() % 43, pela referencia do barco e assim ele imprime na primeira matriz(canto superior esquerdo) o barco.
             while(posi == 0 ){
                 contador++;                     //incremento contador
-                posi = barco((rand() % 43),l,j);
+                posi = barco(rand() % 43,l,j);
             }
             }
         }
