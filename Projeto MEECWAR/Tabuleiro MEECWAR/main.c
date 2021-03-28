@@ -8,75 +8,104 @@ char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste ca
 char letra = 'A';
 
 
-void tabu(){
+void tabu(){                //função que dá print do tabuleiro
+     printf("\n\n\n");
      letra = 'A';
-     linha = resl;
+     linha = resl;          //linha volta ao seu valor inicial
      coluna = 1;
      for(linha; linha >= 1; linha--){
-            printf("%2d  ", linha);
+            printf("%2d  ", linha);                             //print do número das linhas
             for(coluna; resc >= coluna; coluna++ ){
-                printf("%c ", tabuleiro [linha][coluna]);
+                printf("%c ", tabuleiro [linha][coluna]);       //print do tabuleiro
             }
              printf("\n");
-             coluna = 1;
+             coluna = 1;                                        //reset da coluna para 1
     }
     printf("    ");
-    for(coluna; resc >= coluna; coluna++ ){
-        printf("%c ", letra);
-        letra++;
-
+    for(coluna; resc >= coluna; coluna++){
+        printf("%c ", letra);                                   //print da letra das colunas
+        letra++;}
+        printf("\n\n");
 }
-}
 
-void camada(int linha2,int coluna2, int peca){
+void camada(int linha2,int coluna2, int peca){          //Esta função serve para simultaniamente guardar os locais dos barcos, como também para assinalar os locais onde os próximos barcos não podem ficar
     int i, j;
     camada2 [linha2][coluna2] = peca;                   //camada 2 é o array que anotará as posições dos barcos e das posições livres
-    tabuleiro [linha2][coluna2] = peca + '0';         //apenas para teste
+    tabuleiro [linha2][coluna2] = peca + '0';         //apenas para teste, caso queiras saber onde está a peça
     for(i = -1; i <= 1; i++){
             for(j=-1; j <= 1; j++){
-                if(camada2[linha2+i][coluna2+j] == 0){
-                camada2[linha2+i][coluna2+j] = 9;
+                if(camada2[linha2+i][coluna2+j] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas tenha o valor '
+                camada2[linha2+i][coluna2+j] = 9;           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
                 //tabuleiro[linha2+i][coluna2+j] = '9';     //apenas para teste
-                }           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
-                else{
                 }
-        }
-    }
+                else{
+                }}}
 }
 
-void barco(int ref, int l, int j){
-if(contador == 3){
-      ref = 5;}
-    if(ref==0){
-        contador = 0;
+int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
+if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
+      camada(l-1,j+1,1);
+      return 1;}
+else{
+    if(ref==0){                     // matriz vazia
+        return 1;                   //retorna 1 para acabar e para parar o while na função modo_p1
     }
-    else if(ref==1){
-        if(camada2[l][j] == 0){
-            camada(l, j, 1);
-            contador = 0;
-        }
-        else{contador++;
-            barco(rand() % 43,l,j);}
-    }
+    else if(ref==1){                //Caso da peça 1 no canto superior esquerdo
+        if(camada2[l][j] == 0){     //Confirma se a peça pode ser colocada nesse espaço, ou seja, só se a camada2 tiver com aquela posição a zero
+            camada(l, j, 1);        //Chama a função camada com as coordenadas da peça e com o identificador da peça
+            return 1; }}              //retorna 1 para acabar e para parar o while na função modo_p1.
+    //O resto das peças seguirá o mesmo padrão da primeira
+    else if(ref==10){
+        if(camada2[l][j] == 0 && camada2[l][j+1] == 0){
+            camada(l, j, 2); camada(l, j+1, 2);
+            return 1; }}
+
+    else if(ref==11){
+        if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0){
+            camada(l, j+1, 2); camada(l, j+2, 2);
+            return 1; }}
+
+    else if(ref==12){
+        if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0){
+            camada(l-1, j, 2); camada(l-1, j+1, 2);
+            return 1; }}
+
+    else if(ref==13){
+        if(camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0){
+            camada(l-1, j+1, 2); camada(l-1, j+2, 2);
+            return 1; }}
+
+    else if(ref==14){
+        if(camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
+            camada(l-2, j, 2); camada(l-2, j+1, 2);
+            return 1; }}
+
+    else if(ref==15){
+        if(camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
+            camada(l-2, j+1, 2); camada(l-2, j+2, 2);
+            return 1; }}
+
     else if(ref==42){
         if(camada2[l-2][j]== 0 && camada2[l-1][j]== 0 && camada2[l][j]== 0 && camada2[l-2][j+1] == 0 && camada2[l][j+1]== 0 && camada2[l-2][j+2] == 0 && camada2[l-1][j+2]== 0 && camada2[l][j+2]== 0){
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
-            contador = 0;
-        }
-        else{contador++;
-            barco(rand() % 43,l,j);}
-    }
-    else{
+            return 1;}}
 }
+return 0;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 0 o que fará continuar a função while do modo_p1.
 }
+
 
 void modo_p1(){
-        int l,j;//variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento
-
-        srand(time(NULL));
+        int l,j, posi;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+        srand(time(NULL));  //seed para o random
         for (l=resl; l >= 1; l-=3){
-            for(j= 1; j < resc; j+=3){
-            barco(rand() % 43,l,j);
+            for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
+            contador = 0;                       //reset do contador para 0
+            posi = barco(rand() % 43,l,j);      //posi é igual a 1 ou 0 dependendo da funcao barco. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
+            ///Caso queiras testar uma peça podes substituir em cima o rand() % 43, pela referencia do barco e assim ele só imprime esse barco no tabuleiro.
+            while(posi == 0 ){
+                contador++;                     //incremento contador
+                posi = barco((rand() % 43),l,j);
+            }
             }
         }
 }
@@ -135,7 +164,6 @@ int main(int argc, char *argv[]){   int opt, modo;
             printf("Carater %c nao identificado", optopt);
         }
     }
-    system("color 10");
     }
     if((linha%3) !=0 || (resc%3 != 0) || (linha < 9) || (linha > 15) || (resc < 9) || (resc> 24)){ //caso em que não são verificadas as condições corretas para criar o tabuleiro
         printf("Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24 \n");
@@ -156,10 +184,10 @@ int main(int argc, char *argv[]){   int opt, modo;
         printf("%c ", letra);
         letra++;
     }
-    printf("\n\n\n\n\n");
     if (modop==1){
     modo_p1();
     }
+    printf("\n\n");
     tabu();
 }
 

@@ -3,3 +3,9 @@
 	<stdio.h>
 	<stdlib.h>
 
+1616889470 source:/media/sf_C/Projeto MEECWAR/Tabuleiro MEECWAR/main.c
+	<stdio.h>
+	<stdlib.h>
+	<getopt.h>
+	<time.h>
+
