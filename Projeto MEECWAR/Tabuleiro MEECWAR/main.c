@@ -58,42 +58,42 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     //O resto das peças seguirá o mesmo padrão da primeira
     else if(ref==2){          
             if(camada2[l][j+1] == 0){
-            camada(l, j, 1);
+            camada(l, j+1, 1);
             return 1; }}
     
     else if(ref==3){          
             if(camada2[l][j+2] == 0){
-            camada(l, j, 1);
+            camada(l, j+2, 1);
             return 1; }}
 
     else if(ref==4){          
-            if(camada2[l+1][j] == 0){
-            camada(l, j, 1);
+            if(camada2[l-1][j] == 0){
+            camada(l-1, j, 1);
             return 1; }}
     
     else if(ref==5){          
-            if(camada2[l+1][j+1] == 0){
-            camada(l, j, 1);
+            if(camada2[l-1][j+1] == 0){
+            camada(l-1, j+1, 1);
             return 1; }}
 
     else if(ref==6){          
-            if(camada2[l+1][j+2] == 0){
-            camada(l, j, 1);
+            if(camada2[l-1][j+2] == 0){
+            camada(l-1, j+2, 1);
             return 1; }}
 
     else if(ref==7){          
-            if(camada2[l+2][j] == 0){
-            camada(l, j, 1);
+            if(camada2[l-2][j] == 0){
+            camada(l-2, j, 1);
             return 1; }}
 
     else if(ref==8){          
-            if(camada2[l+2][j+1] == 0){
-            camada(l, j, 1);
+            if(camada2[l-2][j+1] == 0){
+            camada(l-2, j+1, 1);
             return 1; }}
 
     else if(ref==9){          
-            if(camada2[l+2][j+2] == 0){
-            camada(l, j, 1);
+            if(camada2[l-2][j+2] == 0){
+            camada(l-2, j+2, 1);
             return 1; }}
     ///Fim peças 1
 
@@ -160,6 +160,35 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     ///Fim peças 2
 
     ///peças num 3 aqui
+    else if(ref==22){
+        if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 ){
+            camada(l, j, 3); camada(l, j+1, 3); camada(l, j+2, 3);
+            return 1; }}
+    
+    else if(ref==23){
+        if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 ){
+            camada(l-1, j, 3); camada(l-1, j+1, 3); camada(l-1, j+2, 3);
+            return 1; }}
+
+    else if(ref==24){
+        if(camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0 ){
+            camada(l-2, j, 3); camada(l-2, j+1, 3); camada(l-2, j+2, 3);
+            return 1; }}
+
+    else if(ref==25){
+        if(camada2[l][j] == 0 && camada2[l-1][j] == 0 && camada2[l-2][j] == 0 ){
+            camada(l, j, 3); camada(l-1, j, 3); camada(l-2, j, 3);
+            return 1; }}
+
+    else if(ref==26){
+        if(camada2[l][j+1] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j+1] == 0 ){
+            camada(l, j+1, 3); camada(l-1, j+1, 3); camada(l-2, j+1, 3);
+            return 1; }}
+
+    else if(ref==27){
+        if(camada2[l][j+2] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0 ){
+            camada(l, j+2, 3); camada(l-1, j+2, 3); camada(l-2, j+2, 3);
+            return 1; }}
     ///Fim peças 3
 
     ///peças do num 4 aqui
