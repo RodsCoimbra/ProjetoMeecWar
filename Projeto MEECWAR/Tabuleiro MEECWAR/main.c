@@ -43,22 +43,61 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
 }
 
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
-if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
+    if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
       camada(l-1,j+1,1);
       return 1;}
-else{
-    if(ref==0){                     // matriz vazia
+    else{
+        if(ref==0){                 // matriz vazia
         return 1;                   //retorna 1 para acabar e para parar o while na função modo_p1
-    }
+        }
+    ///peças num 1 aqui
     else if(ref==1){                //Caso da peça 1 no canto superior esquerdo
         if(camada2[l][j] == 0){     //Confirma se a peça pode ser colocada nesse espaço, ou seja, só se a camada2 tiver com aquela posição a zero
             camada(l, j, 1);        //Chama a função camada com as coordenadas da peça e com o identificador da peça
             return 1; }}              //retorna 1 para acabar e para parar o while na função modo_p1.
     //O resto das peças seguirá o mesmo padrão da primeira
+    else if(ref==2){          
+            if(camada2[l][j+1] == 0){
+            camada(l, j, 1);
+            return 1; }}
+    
+    else if(ref==3){          
+            if(camada2[l][j+2] == 0){
+            camada(l, j, 1);
+            return 1; }}
 
-    ///resto das peças 1 aqui
+    else if(ref==4){          
+            if(camada2[l+1][j] == 0){
+            camada(l, j, 1);
+            return 1; }}
+    
+    else if(ref==5){          
+            if(camada2[l+1][j+1] == 0){
+            camada(l, j, 1);
+            return 1; }}
 
+    else if(ref==6){          
+            if(camada2[l+1][j+2] == 0){
+            camada(l, j, 1);
+            return 1; }}
 
+    else if(ref==7){          
+            if(camada2[l+2][j] == 0){
+            camada(l, j, 1);
+            return 1; }}
+
+    else if(ref==8){          
+            if(camada2[l+2][j+1] == 0){
+            camada(l, j, 1);
+            return 1; }}
+
+    else if(ref==9){          
+            if(camada2[l+2][j+2] == 0){
+            camada(l, j, 1);
+            return 1; }}
+    ///Fim peças 1
+
+    ///Peças do num 2 aqui
     else if(ref==10){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0){
             camada(l, j, 2); camada(l, j+1, 2);
@@ -118,10 +157,12 @@ else{
         if(camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0){
             camada(l-1, j+2, 2); camada(l-2, j+2, 2);
             return 1; }}
+    ///Fim peças 2
 
-   ///peças do número 3 aqui
+    ///peças num 3 aqui
+    ///Fim peças 3
 
-
+    ///peças do num 4 aqui
     else if(ref==28){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0){
             camada(l, j, 4); camada(l, j+1, 4); camada(l-1, j, 4); camada(l-1, j+1, 4);
@@ -141,9 +182,12 @@ else{
         if(camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l-1, j+1, 4); camada(l-1, j+2, 4); camada(l-2, j+1, 4); camada(l-2, j+2, 4);
             return 1; }}
+    ///Fim peças 4
 
-    ///peças do num 5 aqui
+    ///peças num 5 aqui
+    ///Fim peças 5
 
+    ///peças do num 6 aqui
     else if(ref==36){
         if(camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6); camada(l-2, j+2, 6);
@@ -163,15 +207,17 @@ else{
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
             camada(l, j, 6); camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6);
             return 1; }}
-
+    ///Fim peças 6
 
     ///peças num 7 aqui
+    ///Fim peças 7
 
-
+    ///peças num 8 aqui
     else if(ref==42){
         if(camada2[l-2][j]== 0 && camada2[l-1][j]== 0 && camada2[l][j]== 0 && camada2[l-2][j+1] == 0 && camada2[l][j+1]== 0 && camada2[l-2][j+2] == 0 && camada2[l-1][j+2]== 0 && camada2[l][j+2]== 0){
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
             return 1;}}
+    ///Fim peças 8 
 }
 return 0;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 0 o que fará continuar a função while do modo_p1.
 }
