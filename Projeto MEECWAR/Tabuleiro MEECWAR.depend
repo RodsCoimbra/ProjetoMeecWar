@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1616364358 source:/home/student/Programacao/Tabuleiro MEECWAR/main.c
+	<stdio.h>
+	<stdlib.h>
+
+1616897959 source:/media/sf_C/Projeto MEECWAR/Tabuleiro MEECWAR/main.c
+	<stdio.h>
+	<stdlib.h>
+	<getopt.h>
+	<time.h>
+
+1617065239 source:/media/sf_C/Projeto MEECWAR/main.c
+	<stdio.h>
+	<stdlib.h>
+	<getopt.h>
+	<time.h>
+
