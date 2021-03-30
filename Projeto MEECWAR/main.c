@@ -14,19 +14,23 @@ void tabu(){                //função que dá print do tabuleiro
      coluna = 1;
      for(linha; linha >= 1; linha--){
             printf("%2d  ", linha);                             //print do número das linhas
-            for(coluna; resc >= coluna; coluna++ ){
-                printf("%c ", tabuleiro [linha][coluna]);       //print do tabuleiro
-            }
+            for(coluna; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
+                if (tabuleiro [linha][coluna] == 'x'){
+                printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
+                else if (tabuleiro [linha][coluna] == '~'){
+                //printf("\033[0;36m%c \033[0;30m", tabuleiro [linha][coluna]);}         //mostrar tiodósio
+                  printf("%c ", tabuleiro [linha][coluna]);}         //em preto caso já tenham disparado e acertou na agua
+                else {
+                   printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);}
+                }
              printf("\n");
-             coluna = 1;                                        //reset da coluna para 1
-    }
+             coluna = 1; }                                      //reset da coluna para 1
     printf("    ");
     for(coluna; resc >= coluna; coluna++){
         printf("%c ", letra);                                   //print da letra das colunas
         letra++;}
         printf("\n\n");
 }
-
 void camada(int linha2,int coluna2, int peca){          //Esta função serve para simultaniamente guardar os locais dos barcos, como também para assinalar os locais onde os próximos barcos não podem ficar
     int i, j;
     total_b++;
@@ -81,7 +85,7 @@ char col;
 while(verificador == 0){
 disp_c = (rand() % resc) +1;
 disp_l = (rand() % resl) +1;
-if (camada2[disp_l][disp_c] != 10){
+if (camada2[disp_l][disp_c] != 10){             //impedir repeticoes
     verificador = 1;
 }}
 col = disp_c + '@';
@@ -92,7 +96,12 @@ else{tabuleiro[disp_l][disp_c] = camada2[disp_l][disp_c] + '0';
         conta_b++;}
 camada2[disp_l][disp_c] = 10;
 tabu();
-printf("Tiro disparado em : %c%d\n\n",col,disp_l);
+printf("Tiro disparado em : %c%d\n",col,disp_l);
+if (tabuleiro[disp_l][disp_c] == 'x'){
+    printf("Acertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n\n");
+    }
+else{
+    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
 }
 
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
@@ -431,12 +440,12 @@ printf("\n");
 if (modop==1){
     modo_p1();
     conta_pecas();
-    printf("Todas as peças foram colocadas com sucesso! Tens:\npeca 1 - %d\npeca 2 - %d\npeca 3 - %d\npeca 4 - %d\npeca 5 - %d\npeca 6 - %d\npeca 7 - %d\npeca 8 - %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8);
-    sleep(8);
+    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 - %d\npeca 2 - %d\npeca 3 - %d\npeca 4 - %d\npeca 5 - %d\npeca 6 - %d\npeca 7 - %d\npeca 8 - %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8);
+    sleep(1);
     while (modod==1){
-    //system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
+    system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
     modo_d1();
-    //sleep(1);         //Esperar
+    sleep(1);         //Esperar
     if (tiro == total){
         printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
         modod = 4;
