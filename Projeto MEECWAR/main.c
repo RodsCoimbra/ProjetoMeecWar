@@ -3,12 +3,13 @@
 #include <getopt.h>
 #include <time.h>
 
-int linha =9, coluna=1, resl, resc = 9, i, modop=1, pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, camada2[16][25], contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, id_peca[41];
+int linha =9, coluna=1, resl, resc = 9, i, modop=1, pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, camada2[16][25], contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, id_peca[41], disp_c,disp_l, col, veri;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
 
 void tabu(){                //função que dá print do tabuleiro
+     system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
      letra = 'A';
      linha = resl;          //linha volta ao seu valor inicial
      coluna = 1;
@@ -45,6 +46,66 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
                 else{
                 }}}
 }
+void disparo(){
+col = disp_c + '@';             //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
+tiro++;
+if (camada2[disp_l][disp_c] == 0 || camada2[disp_l][disp_c] == 9){
+    tabuleiro[disp_l][disp_c] = 'x';}
+else{tabuleiro[disp_l][disp_c] = camada2[disp_l][disp_c] + '0';
+        conta_b++;
+        veri++;}
+camada2[disp_l][disp_c] = 10;
+tabu();
+printf("Tiro disparado em : %c%d\n",col,disp_l);
+if (tabuleiro[disp_l][disp_c] == 'x'){
+    printf("Acertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n\n");
+    }
+else{
+    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
+    sleep(1);                 //Esperar
+}
+
+cruz(int veri){
+switch(veri){
+case 0:
+disp_c +=1; disp_l -=1;   //meio
+disparo();
+break;
+case 1:
+disp_l +=1;               //centro cima
+disparo();
+break;
+case 2:
+disp_l -=2;               //centro baixo
+disparo();
+break;
+case 3:
+disp_c -=1; disp_l +=1;   //esquerda meio
+disparo();
+break;
+case 4:
+disp_c +=2;               //direita meio
+disparo();
+break;
+case 5:
+disp_c -=2; disp_l +=1;   //canto superior esquerdo
+disparo();
+break;
+case 6:
+disp_c +=2; disp_l -=2;   //canto inferior direito
+disparo();
+break;
+case 7:
+disp_l +=2;               //canto superior direito
+disparo();
+break;
+case 8:
+disp_c -=2; disp_l -=2;   //canto inferior esquerdo
+disparo();
+break;
+default:{}
+}
+}
 
 void conta_pecas(){
 int num;
@@ -80,7 +141,7 @@ for (num = 1; num <= 40; num ++){
 }
 void modo_d1(){                  //Modo de disparo aleatório
 srand(time(NULL));
-int disp_c,disp_l, verificador = 0;
+int verificador = 0;
 char col;
 while(verificador == 0){
 disp_c = (rand() % resc) +1;
@@ -88,26 +149,30 @@ disp_l = (rand() % resl) +1;
 if (camada2[disp_l][disp_c] != 10){             //impedir repeticoes
     verificador = 1;
 }}
-col = disp_c + '@';
-tiro++;
-if (camada2[disp_l][disp_c] == 0 || camada2[disp_l][disp_c] == 9){
-    tabuleiro[disp_l][disp_c] = 'x';}
-else{tabuleiro[disp_l][disp_c] = camada2[disp_l][disp_c] + '0';
-        conta_b++;}
-camada2[disp_l][disp_c] = 10;
-tabu();
-printf("Tiro disparado em : %c%d\n",col,disp_l);
-if (tabuleiro[disp_l][disp_c] == 'x'){
-    printf("Acertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n\n");
-    }
-else{
-    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
+disparo();
+}
+
+void modo_d2(){
+int num = 0, destruir_b, save_l, save_c, k;
+for (disp_l=resl; disp_l >= 1; disp_l-=3){
+            save_l = disp_l;
+            for(disp_c = 1; disp_c < resc; disp_c+=3){
+            veri = 0;
+            save_c = disp_c;
+            num++;
+            destruir_b = id_peca[num];
+            for(k=0; veri != destruir_b || (destruir_b == 0 && k != 9); k++){
+                cruz(k);}
+            disp_c = save_c;
+            disp_l = save_l;
+}
+}
 }
 
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
     if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
-      camada(l-1,j+1,1);
-      return 1;}
+     camada(l-1,j+1,1);
+     return 1;}
     else{
         if(ref==0){                 // matriz vazia
         return 0;                   //retorna 1 para acabar e para parar o while na função modo_p1
@@ -440,12 +505,10 @@ printf("\n");
 if (modop==1){
     modo_p1();
     conta_pecas();
-    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 - %d\npeca 2 - %d\npeca 3 - %d\npeca 4 - %d\npeca 5 - %d\npeca 6 - %d\npeca 7 - %d\npeca 8 - %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8);
-    sleep(1);
+    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
+    sleep(10);
     while (modod==1){
-    system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
     modo_d1();
-    sleep(1);         //Esperar
     if (tiro == total){
         printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
         modod = 4;
@@ -455,8 +518,20 @@ if (modop==1){
         modod = 4;
         printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
 
-}}
-return 0;
 }
+   while (modod==2){
+        modo_d2();
+        if (tiro == total){
+            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
+            modod = 4;
+            break;
+        }
+        else if (conta_b == total_b){
+            modod = 4;
+            printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
 
+}}
+else{}
+    return 0;
+}
 
