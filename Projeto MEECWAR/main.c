@@ -505,8 +505,8 @@ printf("\n");
 if (modop==1){
     modo_p1();
     conta_pecas();
-    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
-    sleep(10);
+    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\n\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
+    sleep(8);
     while (modod==1){
     modo_d1();
     if (tiro == total){
