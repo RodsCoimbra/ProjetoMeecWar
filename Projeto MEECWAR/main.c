@@ -535,3 +535,21 @@ else{}
     return 0;
 }
 
+
+void modo_p2 (){
+    rest_mat(); //função que faz a analise da quantidade de matrizes, numero_peças<=((linhas*colunas/9)/2)
+    /// dúvidas: As peças irão ser colocadas aleatóriamente
+
+    for (i=0, l<linha && c<coluna, l++, c++) {  //pode se fazer o incremento de 2 variaveis assim?
+        barco();
+        //colocar random para cada peça e uma opção vazia?
+    }
+}     // ver valor da matriz e fazer com que o loop seja a quantidade de matrizes 3x3 criadas
+
+void rest_mat(linhas, colunas){
+    float n_pecas_max;
+    n_pecas_max=((linhas*colunas/9)/2);
+    if ( n_peças>((linhas*colunas/9)/2) ) {
+        printf("Número de peças inválido, tera de introduzir um numero de peças inferior a %f", n_pecas_max);
+    } ///Terá de ser posto no main or no opt?
+}
