@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include <time.h>
 
-int linha =9, coluna=1, resl, resc = 9, i, modop=1, pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, camada2[16][25], contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, id_peca[41], disp_c,disp_l, col, veri;
+int linha =9, coluna=1, resl, resc = 9, modop=1, pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, camada2[16][25], contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, id_peca[41], disp_c,disp_l, col, veri;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
@@ -18,7 +18,7 @@ void tabu(){                //função que dá print do tabuleiro
             for(coluna; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
                 if (tabuleiro [linha][coluna] == 'x'){
                 printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
-                else if (tabuleiro [linha][coluna] == '~'){
+                else if (tabuleiro [linha][coluna] == '-'){
                 //printf("\033[0;36m%c \033[0;30m", tabuleiro [linha][coluna]);}         //mostrar tiodósio
                   printf("%c ", tabuleiro [linha][coluna]);}         //em preto caso já tenham disparado e acertou na agua
                 else {
@@ -434,7 +434,8 @@ id_peca[num] = posi;
 }
 
 int main(int argc, char *argv[]){
-    int opt, modo, opterr = 0, total;
+    int opt, modo, opterr = 0, total, n_pecas;
+    float n_pecas_max;;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
         switch (opt){
         case 't':
@@ -453,28 +454,28 @@ int main(int argc, char *argv[]){
         sscanf(optarg,"%d", &modod);
         break;
         case '1':
-        sscanf(optarg, "%d", pecas1);
+        sscanf(optarg, "%d", &pecas1);
         break;
         case '2':
-        sscanf(optarg, "%d", pecas2);
+        sscanf(optarg, "%d", &pecas2);
         break;
         case '3':
-        sscanf(optarg, "%d", pecas3);
+        sscanf(optarg, "%d", &pecas3);
         break;
         case '4':
-        sscanf(optarg, "%d", pecas4);
+        sscanf(optarg, "%d", &pecas4);
         break;
         case '5':
-        sscanf(optarg, "%d", pecas5);
+        sscanf(optarg, "%d", &pecas5);
         break;
         case '6':
-        sscanf(optarg, "%d", pecas6);
+        sscanf(optarg, "%d", &pecas6);
         break;
         case '7':
-        sscanf(optarg, "%d", pecas7);
+        sscanf(optarg, "%d", &pecas7);
         break;
         case '8':
-        sscanf(optarg, "%d", pecas8);
+        sscanf(optarg, "%d", &pecas8);
         break;
         default:{
             printf("Carater %c nao identificado", optopt);
@@ -485,12 +486,11 @@ int main(int argc, char *argv[]){
         printf("Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24 \n");
         exit(0);
     }
-    resl = linha;
     total = resc * resl;
     for(linha; linha >= 1; linha--){
             printf("%2d  ", linha);
             for(coluna; resc >= coluna; coluna++ ){
-                tabuleiro [linha][coluna] = '~';
+                tabuleiro [linha][coluna] = '-';
                 printf("%c ", tabuleiro [linha][coluna]);
             }
              printf("\n");
@@ -506,7 +506,19 @@ if (modop==1){
     modo_p1();
     conta_pecas();
     printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\n\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
-    sleep(8);
+    sleep(8);}
+
+else if (modop==2){
+    n_pecas_max=((resl*resc/9)/2);
+    n_pecas = pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8;
+    if ( n_pecas > n_pecas_max || pecas1 < pecas2 || pecas2 < pecas3 || pecas3 < pecas4 || pecas4 < pecas5 || pecas5 < pecas6 || pecas6 < pecas7 || pecas7 < pecas8) {
+        printf("Número de peças inválido!");
+        return -1; }
+    modo_p2();
+}
+else{
+    return -1;
+}
     while (modod==1){
     modo_d1();
     if (tiro == total){
@@ -530,26 +542,21 @@ if (modop==1){
             modod = 4;
             printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
 
-}}
-else{}
-    return 0;
+}
+return 0;
 }
 
 
 void modo_p2 (){
-    rest_mat(); //função que faz a analise da quantidade de matrizes, numero_peças<=((linhas*colunas/9)/2)
-    /// dúvidas: As peças irão ser colocadas aleatóriamente
-
-    for (i=0, l<linha && c<coluna, l++, c++) {  //pode se fazer o incremento de 2 variaveis assim?
+int l,j, num = 0, posi = 0;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+    srand(time(NULL));          //seed para o random
+    for (l=resl; l >= 1; l-=3){
+        for(j= 1; j < resc; j+=3){
         barco();
         //colocar random para cada peça e uma opção vazia?
     }
-}     // ver valor da matriz e fazer com que o loop seja a quantidade de matrizes 3x3 criadas
+}     // ver valor da matriz e fazer com que o loop seja a quantidade de matrizes 3x3 criadas*/
 
-void rest_mat(linhas, colunas){
-    float n_pecas_max;
-    n_pecas_max=((linhas*colunas/9)/2);
-    if ( n_peças>((linhas*colunas/9)/2) ) {
-        printf("Número de peças inválido, tera de introduzir um numero de peças inferior a %f", n_pecas_max);
-    } ///Terá de ser posto no main or no opt?
-}
+
+
+
