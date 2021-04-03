@@ -14,9 +14,9 @@ void tabu(){                //função que dá print do tabuleiro
      letra = 'A';
      linha = resl;          //linha volta ao seu valor inicial
      coluna = 1;
-     for(linha; linha >= 1; linha--){
+     for(; linha >= 1; linha--){
             printf("%2d  ", linha);                             //print do número das linhas
-            for(coluna; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
+            for(; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
                 if (tabuleiro [linha][coluna] == 'x'){
                 printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
                 else if (tabuleiro [linha][coluna] == '-'){
@@ -27,7 +27,7 @@ void tabu(){                //função que dá print do tabuleiro
              printf("\n");
              coluna = 1; }                                      //reset da coluna para 1
     printf("    ");
-    for(coluna; resc >= coluna; coluna++){
+    for(; resc >= coluna; coluna++){
         printf("%c ", letra);                                   //print da letra das colunas
         letra++;}
         printf("\n\n");
@@ -62,7 +62,7 @@ if (tabuleiro[disp_l][disp_c] == 'x'){
     }
 else{
     printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
-    //sleep(1);                 //Esperar
+    //sleep(1);                 //Esperar- Apenas para teste
 }
 
 void cruz(int veri){
@@ -402,7 +402,7 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
             return 8;}}
     //Fim peças 8
 }
-return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 0 o que fará continuar a função while do modo_p1.
+return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
 void modo_p1(){
@@ -414,7 +414,7 @@ void modo_p1(){
             num++;
             contador = 0;                       //reset do contador para 0
             posi = barco(rand() % 43,l,j);      //posi é igual a 1 ou 0 dependendo da funcao barco. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
-            while(posi == 10 ){
+            while(posi == 10){
                 contador++;                     //incremento contador
                 posi = barco(rand() % 43,l,j);
             }
@@ -424,7 +424,7 @@ id_peca[num] = posi;
 }
 
 int verificador(int id,int l,int j, int incre){
-int bar, posi, num, incremento;
+int num, incremento;
     if (id==0){
         id_peca[incre]=0;
         return 0;
@@ -496,7 +496,7 @@ return 0;
 }
 
 void modo_p2 (int n_pecas){
-int l ,j, num = 0, pecas[21] = {}, id = 9, veri1 = 0, veri2 = 0, stop, matriz[16][25] = {}, incre;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+int l ,j, num = 0, pecas[21] = {},/*veri1 = 0,*/ veri2 = 0, stop, matriz[16][25] = {}, incre=0;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
     srand(time(NULL));          //seed para o random
     for(j = 0; j < pecas1; j++){
     pecas[num] = 1;
@@ -549,7 +549,7 @@ int l ,j, num = 0, pecas[21] = {}, id = 9, veri1 = 0, veri2 = 0, stop, matriz[16
 veri2++;
 incre = 0;
 }
-if (n_pecas = b_colocados && veri2 == 1000){
+if (n_pecas > b_colocados && veri2 == 1000){
     printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
     exit(-1);}
 else{
@@ -621,9 +621,9 @@ int main(int argc, char *argv[]){
     }
     resl = linha;
     total = resc * resl;
-    for(linha; linha >= 1; linha--){
+    for(; linha >= 1; linha--){
             printf("%2d  ", linha);
-            for(coluna; resc >= coluna; coluna++ ){
+            for(; resc >= coluna; coluna++ ){
                 tabuleiro [linha][coluna] = '-';
                 printf("%c ", tabuleiro [linha][coluna]);
             }
@@ -631,7 +631,7 @@ int main(int argc, char *argv[]){
              coluna = 1;
     }
 printf("    ");
-for(coluna; resc >= coluna; coluna++){
+for(; resc >= coluna; coluna++){
     printf("%c ", letra);
     letra++;
     }
@@ -640,7 +640,7 @@ if (modop==1){
     modo_p1();
     conta_pecas();
     printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\n\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
-    sleep(3);       //esperar
+    sleep(5);       //esperar
     }
 
 else if (modop==2){
