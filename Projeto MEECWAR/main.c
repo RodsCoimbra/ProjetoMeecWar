@@ -3,7 +3,8 @@
 #include <getopt.h>
 #include <time.h>
 
-int linha =9, coluna=1, resl, resc = 9, modop=1, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0, camada2[16][25]={NULL}, contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, id_peca[41] = {NULL}, disp_c,disp_l, col, veri, b_colocados = 0;
+int camada2[16][25]={}, id_peca[41] = {};
+int linha =9, coluna=1, resl, resc = 9, modop=1, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, col, veri, b_colocados = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
@@ -423,18 +424,19 @@ id_peca[num] = posi;
 }
 
 int verificador(int id,int l,int j, int incre){
-int bar, posi, num, incremento;
+/*int bar, posi, num, incremento;
     if (id==0){
         id_peca[incre]=0;
         return 0;
-    }
+  }
     else if (id==1){
         for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 9 + 1;
+        num = (rand() % 9)+1;
         //[incremento]
             if((barco(num,l,j)) != 10){
                 id_peca[incre]= 1;
-                return 1;}
+                return 1;
+                }
         }
     }
 
@@ -490,11 +492,11 @@ int bar, posi, num, incremento;
             id_peca[incre]=8;
         return 1;}}
 
-return 0;
+return 0;*/
 }
 
 void modo_p2 (int n_pecas){
-int l ,j, num = 0, pecas[21] = {NULL}, id = 9, veri1 = 0, veri2 = 0, stop, matriz[16][25] = {NULL}, incre;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+int l ,j, num = 0, pecas[21] = {}, id = 9, veri1 = 0, veri2 = 0, stop, matriz[16][25] = {}, incre;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
     srand(time(NULL));          //seed para o random
     for(j = 0; j < pecas1; j++){
     pecas[num] = 1;
@@ -547,7 +549,7 @@ int l ,j, num = 0, pecas[21] = {NULL}, id = 9, veri1 = 0, veri2 = 0, stop, matri
 veri2++;
 incre = 0;
 }
-if (n_pecas > b_colocados && veri2 == 1000){
+if (n_pecas = b_colocados && veri2 == 1000){
     printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
     exit(-1);}
 else{
