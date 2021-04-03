@@ -424,7 +424,7 @@ id_peca[num] = posi;
 }
 
 int verificador(int id,int l,int j, int incre){
-/*int bar, posi, num, incremento;
+int bar, posi, num, incremento;
     if (id==0){
         id_peca[incre]=0;
         return 0;
@@ -492,7 +492,7 @@ int verificador(int id,int l,int j, int incre){
             id_peca[incre]=8;
         return 1;}}
 
-return 0;*/
+return 0;
 }
 
 void modo_p2 (int n_pecas){
