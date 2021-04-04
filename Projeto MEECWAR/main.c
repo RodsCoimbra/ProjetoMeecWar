@@ -3,8 +3,8 @@
 #include <getopt.h>
 #include <time.h>
 
-int camada2[16][25]={}, id_peca[41] = {};
-int linha =9, coluna=1, resl, resc = 9, modop=1, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, col, veri, b_colocados = 0;
+int camada2[16][25]={}, id_peca[41] = {}, camada_d[16][25][41]={};
+int linha = 9, coluna = 1, resl, resc = 9, modop=1, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, col, veri, b_colocados = 0, identificador = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
@@ -41,6 +41,7 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
             for(j=-1; j <= 1; j++){
                 if(camada2[linha2+i][coluna2+j] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas tenha o valor '
                 camada2[linha2+i][coluna2+j] = 9;           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
+                camada_d[linha2+i][coluna2+j][identificador]=11;
                 //tabuleiro[linha2+i][coluna2+j] = '9';     //apenas para teste
                 }
                 else{
@@ -62,7 +63,7 @@ if (tabuleiro[disp_l][disp_c] == 'x'){
     }
 else{
     printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
-    //sleep(1);                 //Esperar- Apenas para teste
+    sleep(1);                 //Esperar- Apenas para teste
 }
 
 void cruz(int veri){
@@ -72,23 +73,22 @@ disp_c +=1; disp_l -=1;   //meio
 disparo();
 break;
 case 1:
-disp_l +=1;               //centro cima
+disp_c +=1;               //centro cima
 disparo();
 break;
 case 2:
-disp_l -=2;               //centro baixo
+disp_l -=2; disp_c +=1;   //centro baixo
 disparo();
 break;
 case 3:
-disp_c -=1; disp_l +=1;   //esquerda meio
+disp_l -=1;               //esquerda meio
 disparo();
 break;
 case 4:
-disp_c +=2;               //direita meio
+disp_c +=2; disp_l -=1;   //direita meio
 disparo();
 break;
-case 5:
-disp_c -=2; disp_l +=1;   //canto superior esquerdo
+case 5:                   //canto superior esquerdo
 disparo();
 break;
 case 6:
@@ -96,11 +96,11 @@ disp_c +=2; disp_l -=2;   //canto inferior direito
 disparo();
 break;
 case 7:
-disp_l +=2;               //canto superior direito
+disp_c +=2;               //canto superior direito
 disparo();
 break;
 case 8:
-disp_c -=2; disp_l -=2;   //canto inferior esquerdo
+disp_l -=2;               //canto inferior esquerdo
 disparo();
 break;
 default:{}
@@ -161,65 +161,78 @@ for (disp_l=resl; disp_l >= 1; disp_l-=3){
             num++;
             destruir_b = id_peca[num];
             for(k=0; veri != destruir_b || (destruir_b == 0 && k != 9); k++){
-                cruz(k);}
-            disp_c = save_c;
-            disp_l = save_l;
+                cruz(k);
+                disp_c = save_c;
+                disp_l = save_l;}
 }
 }
 }
 
+
+
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
     if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
      camada(l-1,j+1,1);
+     identificador++;
      return 1;}
     else{
         if(ref==0){                 // matriz vazia
+        identificador++;
         return 0;                   //retorna 1 para acabar e para parar o while na função modo_p1
         }
     //peças num 1 aqui
     else if(ref==1){                //Caso da peça 1 no canto superior esquerdo
         if(camada2[l][j] == 0){     //Confirma se a peça pode ser colocada nesse espaço, ou seja, só se a camada2 tiver com aquela posição a zero
             camada(l, j, 1);        //Chama a função camada com as coordenadas da peça e com o identificador da peça
+            identificador++;
             return 1; }}            //retorna 1 para acabar e para parar o while na função modo_p1.
     //O resto das peças seguirá o mesmo padrão da primeira
     else if(ref==2){
             if(camada2[l][j+1] == 0){
             camada(l, j+1, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==3){
             if(camada2[l][j+2] == 0){
             camada(l, j+2, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==4){
             if(camada2[l-1][j] == 0){
             camada(l-1, j, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==5){
             if(camada2[l-1][j+1] == 0){
             camada(l-1, j+1, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==6){
             if(camada2[l-1][j+2] == 0){
             camada(l-1, j+2, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==7){
             if(camada2[l-2][j] == 0){
             camada(l-2, j, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==8){
             if(camada2[l-2][j+1] == 0){
             camada(l-2, j+1, 1);
+            identificador++;
             return 1; }}
 
     else if(ref==9){
             if(camada2[l-2][j+2] == 0){
             camada(l-2, j+2, 1);
+            identificador++;
             return 1; }}
     //Fim peças 1
 
@@ -227,61 +240,73 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==10){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0){
             camada(l, j, 2); camada(l, j+1, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==11){
         if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0){
             camada(l, j+1, 2); camada(l, j+2, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==12){
         if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0){
             camada(l-1, j, 2); camada(l-1, j+1, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==13){
         if(camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0){
             camada(l-1, j+1, 2); camada(l-1, j+2, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==14){
         if(camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
             camada(l-2, j, 2); camada(l-2, j+1, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==15){
         if(camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l-2, j+1, 2); camada(l-2, j+2, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==16){
         if(camada2[l][j] == 0 && camada2[l-1][j] == 0){
             camada(l, j, 2); camada(l-1, j, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==17){
         if(camada2[l-1][j] == 0 && camada2[l-2][j] == 0){
             camada(l-1, j, 2); camada(l-2, j, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==18){
         if(camada2[l][j+1] == 0 && camada2[l-1][j+1] == 0){
             camada(l, j+1, 2); camada(l-1, j+1, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==19){
         if(camada2[l-1][j+1] == 0 && camada2[l-2][j+1] == 0){
             camada(l-1, j+1, 2); camada(l-2, j+1, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==20){
         if(camada2[l][j+2] == 0 && camada2[l-1][j+2] == 0){
             camada(l, j+2, 2); camada(l-1, j+2, 2);
+            identificador++;
             return 2; }}
 
     else if(ref==21){
         if(camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0){
             camada(l-1, j+2, 2); camada(l-2, j+2, 2);
+            identificador++;
             return 2; }}
     //Fim peças 2
 
@@ -289,31 +314,37 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==22){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 ){
             camada(l, j, 3); camada(l, j+1, 3); camada(l, j+2, 3);
+            identificador++;
             return 3; }}
 
     else if(ref==23){
         if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 ){
             camada(l-1, j, 3); camada(l-1, j+1, 3); camada(l-1, j+2, 3);
+            identificador++;
             return 3; }}
 
     else if(ref==24){
         if(camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0 ){
             camada(l-2, j, 3); camada(l-2, j+1, 3); camada(l-2, j+2, 3);
+            identificador++;
             return 3; }}
 
     else if(ref==25){
         if(camada2[l][j] == 0 && camada2[l-1][j] == 0 && camada2[l-2][j] == 0 ){
             camada(l, j, 3); camada(l-1, j, 3); camada(l-2, j, 3);
+            identificador++;
             return 3; }}
 
     else if(ref==26){
         if(camada2[l][j+1] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j+1] == 0 ){
             camada(l, j+1, 3); camada(l-1, j+1, 3); camada(l-2, j+1, 3);
+            identificador++;
             return 3; }}
 
     else if(ref==27){
         if(camada2[l][j+2] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0 ){
             camada(l, j+2, 3); camada(l-1, j+2, 3); camada(l-2, j+2, 3);
+            identificador++;
             return 3; }}
     //Fim peças 3
 
@@ -321,21 +352,25 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==28){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0){
             camada(l, j, 4); camada(l, j+1, 4); camada(l-1, j, 4); camada(l-1, j+1, 4);
+            identificador++;
             return 4; }}
 
     else if(ref==29){
         if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0){
             camada(l, j+1, 4); camada(l, j+2, 4); camada(l-1, j+1, 4); camada(l-1, j+2, 4);
+            identificador++;
             return 4; }}
 
     else if(ref==30){
         if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
             camada(l-1, j, 4); camada(l-1, j+1, 4); camada(l-2, j, 4); camada(l-2, j+1, 4);
+            identificador++;
             return 4; }}
 
     else if(ref==31){
         if(camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l-1, j+1, 4); camada(l-1, j+2, 4); camada(l-2, j+1, 4); camada(l-2, j+2, 4);
+            identificador++;
             return 4; }}
     //Fim peças 4
 
@@ -343,21 +378,25 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==32){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j+1] == 0){
             camada(l, j, 5); camada(l, j+1, 5); camada(l, j+2, 5); camada(l-1, j+1, 5); camada(l-2, j+1, 5);
+            identificador++;
             return 5; }}
 
     else if(ref==33){
         if(camada2[l][j] == 0 && camada2[l-1][j] == 0 && camada2[l-2][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0){
             camada(l, j, 5); camada(l-1, j, 5); camada(l-2, j, 5); camada(l-1, j+1, 5); camada(l-1, j+2, 5);
+            identificador++;
             return 5; }}
 
     else if(ref==34){
         if(camada2[l][j+1] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j+1, 5); camada(l-1, j+1, 5); camada(l-2, j, 5); camada(l-2, j+1, 5); camada(l-2, j+2, 5);
+            identificador++;
             return 5; }}
 
     else if(ref==35){
         if(camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+2] == 0){
             camada(l-1, j, 5); camada(l-1, j+1, 5); camada(l, j+2, 5); camada(l-1, j+2, 5); camada(l-2, j+2, 5);
+            identificador++;
             return 5; }}
     //Fim peças 5
 
@@ -365,21 +404,25 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==36){
         if(camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6); camada(l-2, j+2, 6);
+            identificador++;
             return 6; }}
 
     else if(ref==37){
         if(camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j+1, 6); camada(l, j+2, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j+1, 6); camada(l-2, j+2, 6);
+            identificador++;
             return 6; }}
 
     else if(ref==38){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j+1] == 0){
             camada(l, j, 6); camada(l, j+1, 6); camada(l, j+2, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j+1, 6);
+            identificador++;
             return 6; }}
 
     else if(ref==39){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0){
             camada(l, j, 6); camada(l, j+1, 6); camada(l-1, j, 6); camada(l-1, j+2, 6); camada(l-2, j, 6); camada(l-2, j+1, 6);
+            identificador++;
             return 6; }}
     //Fim peças 6
 
@@ -387,11 +430,13 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==40){
         if(camada2[l][j] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j] == 0 && camada2[l-1][j+1] == 0 && camada2[l-1][j+2] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j, 7); camada(l, j+2, 7); camada(l-1, j, 7); camada(l-1, j+1, 7); camada(l-1, j+2, 7); camada(l-2, j, 7); camada(l-2, j+2, 7);
+            identificador++;
             return 7; }}
 
     else if(ref==41){
         if(camada2[l][j] == 0 && camada2[l][j+1] == 0 && camada2[l][j+2] == 0 && camada2[l-1][j+1] == 0 && camada2[l-2][j] == 0 && camada2[l-2][j+1] == 0 && camada2[l-2][j+2] == 0){
             camada(l, j, 7); camada(l, j+1, 7); camada(l, j+2, 7); camada(l-1, j+1, 7); camada(l-2, j, 7); camada(l-2, j+1, 7); camada(l-2, j+2, 7);
+            identificador++;
             return 7; }}
     //Fim peças 7
 
@@ -399,6 +444,7 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
     else if(ref==42){
         if(camada2[l-2][j]== 0 && camada2[l-1][j]== 0 && camada2[l][j]== 0 && camada2[l-2][j+1] == 0 && camada2[l][j+1]== 0 && camada2[l-2][j+2] == 0 && camada2[l-1][j+2]== 0 && camada2[l][j+2]== 0){
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
+            identificador++;
             return 8;}}
     //Fim peças 8
 }
