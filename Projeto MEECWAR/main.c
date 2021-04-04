@@ -12,11 +12,9 @@ char letra = 'A';
 void tabu(){                //função que dá print do tabuleiro
      system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
      letra = 'A';
-     linha = resl;          //linha volta ao seu valor inicial
-     coluna = 1;
-     for(; linha >= 1; linha--){
+     for(linha = resl; linha >= 1; linha--){
             printf("%2d  ", linha);                             //print do número das linhas
-            for(; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
+            for(coluna = 1; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
                 if (tabuleiro [linha][coluna] == 'x'){
                 printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
                 else if (tabuleiro [linha][coluna] == '-'){
@@ -24,10 +22,9 @@ void tabu(){                //função que dá print do tabuleiro
                 else {
                    printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);}
                 }
-             printf("\n");
-             coluna = 1; }                                      //reset da coluna para 1
+             printf("\n");}
     printf("    ");
-    for(; resc >= coluna; coluna++){
+    for(coluna = 1; resc >= coluna; coluna++){
         printf("%c ", letra);                                   //print da letra das colunas
         letra++;}
         printf("\n\n");
@@ -41,7 +38,7 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
             for(j=-1; j <= 1; j++){
                 if(camada2[linha2+i][coluna2+j] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas tenha o valor '
                 camada2[linha2+i][coluna2+j] = 9;           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
-                camada_d[linha2+i][coluna2+j][identificador]=11;
+                //camada_d[linha2+i][coluna2+j][identificador] = 11;
                 //tabuleiro[linha2+i][coluna2+j] = '9';     //apenas para teste
                 }
                 else{
@@ -63,7 +60,7 @@ if (tabuleiro[disp_l][disp_c] == 'x'){
     }
 else{
     printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
-    sleep(1);                 //Esperar- Apenas para teste
+    //sleep(1);                 //Esperar- Apenas para teste
 }
 
 void cruz(int veri){
