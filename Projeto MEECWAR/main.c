@@ -4,7 +4,7 @@
 #include <time.h>
 
 int camada2[17][26][42]={}, id_peca[41] = {};
-int linha = 9, coluna = 1, resl, resc = 9, modop=1, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, col, veri, b_colocados = 0, identificador = 1;
+int linha = 9, coluna = 1, resl, resc = 9, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, veri, identificador = 1;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
@@ -50,6 +50,7 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
 }
 
 void disparo(){
+int col;
 if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 1 && camada2[disp_l][disp_c][0] == 9){}
 else{
 col = disp_c + '@';             //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
@@ -476,7 +477,7 @@ return 10;   //caso em que as peças não podem ser colocadas e portanto é reto
 }
 
 void modo_p1(){
-        int l,j, num = 0, posi = 0;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+        int l,j, num = 0, posi = 0,contador = 0;    //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
         srand(time(NULL));  //seed para o random
         for (l=resl; l >= 1; l-=3){
             for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
@@ -493,67 +494,80 @@ void modo_p1(){
 id_peca[num] = posi;
 }
 
+int *aleatorios (int ini,int vari) {
+    static int numeros[12]={};
+    int i, j, inc;
+    for (i = 0 ; i < vari ; i+= inc) {
+        numeros[i]= (rand()%vari)+ini;
+        inc= 1;
+        for (j= 0 ; j < i ; j++) {
+            if (numeros[i]==numeros[j]){
+                inc= 0;
+                break;
+            }
+        }
+    }
+    return numeros;
+
+}
+
 int verificador(int id,int l,int j, int incre){
-int num, incremento;
+int a = 0;
     if (id==0){
         id_peca[incre]=0;
         return 0;
   }
     else if (id==1){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = (rand() % 9)+1;
-        //[incremento]
-            if((barco(num,l,j)) != 10){
+    int *num = aleatorios(1, 9);
+    for(a=0; a < 9; a++) {
+            if((barco(num[a],l,j)) != 10){
                 id_peca[incre]= 1;
-                return 1;
-                }
-        }
-    }
+                return 1;}}}
 
     else if (id==2){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 12 + 10;
-            if((barco(num,l,j)) != 10){
+        int *num = aleatorios(12, 10);
+        for(a=0; a < 10; a++) {
+            if((barco(num[a],l,j)) != 10){
                 id_peca[incre]= 2;
                 return 1;}}}
 
 
     else if (id==3){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 6 + 22;
-            if((barco(num,l,j)) != 10){
-                id_peca[incre]=3;
+        int *num = aleatorios(22, 6);
+        for(a=0; a < 6; a++) {
+            if((barco(num[a],l,j)) != 10){
+                id_peca[incre]= 3;
                 return 1;}}}
 
     else if (id==4){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 4 + 28;
-            if((barco(num,l,j)) != 10){
-                id_peca[incre]=4;
+        int *num = aleatorios(28, 4);
+        for(a=0; a < 4; a++) {
+            if((barco(num[a],l,j)) != 10){
+                id_peca[incre]= 4;
                 return 1;}}}
 
 
     else if (id==5){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 4 + 32;
-            if((barco(num,l,j)) != 10){
-                id_peca[incre]=5;
+        int *num = aleatorios(32, 4);
+        for(a=0; a < 4; a++) {
+            if((barco(num[a],l,j)) != 10){
+                id_peca[incre]= 5;
                 return 1;}}}
 
 
     else if (id==6){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 4 + 36;
-            if((barco(num,l,j)) != 10){
-                id_peca[incre]=6;
+        int *num = aleatorios(36, 4);
+        for(a=0; a < 4; a++) {
+            if((barco(num[a],l,j)) != 10){
+                id_peca[incre]= 6;
                 return 1;}}}
 
 
     else if (id==7){
-        for (incremento = 0; incremento < 50; incremento++){
-        num = rand() % 2 + 40;
-            if((barco(num,l,j)) != 10){
-                id_peca[incre]=7;
+        int *num = aleatorios(40, 2);
+        for(a=0; a < 2; a++) {
+            if((barco(num[a],l,j)) != 10){
+                id_peca[incre]= 7;
                 return 1;}}}
 
 
@@ -562,11 +576,12 @@ int num, incremento;
             id_peca[incre]=8;
         return 1;}}
 
-return 0;
+return 2;
 }
 
+
 void modo_p2 (int n_pecas){
-int l ,j, num = 0, pecas[21] = {},/*veri1 = 0,*/ veri2 = 0, stop, matriz[16][25] = {}, incre=0;      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+int i, l ,j, k, num = 0, pecas[21] = {},veri1 = 0, veri2 = 0, stop, b_colocados = 0, incre=0, rnum, cnum[21] = {};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
     srand(time(NULL));          //seed para o random
     for(j = 0; j < pecas1; j++){
     pecas[num] = 1;
@@ -600,25 +615,42 @@ int l ,j, num = 0, pecas[21] = {},/*veri1 = 0,*/ veri2 = 0, stop, matriz[16][25]
     pecas[num] = 8;
     num++;
     }
+    rnum = num + 1;
     num = 0;
     while (n_pecas > b_colocados && veri2 != 1000 ){
     for (l=resl; l >= 1; l-=3){
         for(j= 1; j < resc; j+=3){
+        do {
         stop = 0;
-        incre++;
-        if(matriz[l][j] == 0){
-        num = rand() % 21;
-        stop = verificador(pecas[num],l,j,incre);
+        veri1++;
+        while(i == 0){
+        num = rand() % rnum;
+        cnum[incre] = num;
+        for (k = 0 ; k < 21 ; k++){
+            if (num == cnum[k]){
+                i = 0;
+                break;}
+            else {i = 1;}}}
+        stop = verificador(pecas[num],l,j,incre);}
+        while(stop == 2 && veri1 != 8);
         if (stop == 1){
-            pecas[num] = 0;
-            b_colocados++;
-            matriz[l][j]=1;
-        }
-        }
-}}
+            b_colocados++;}
+            incre++;}}
+if (n_pecas > b_colocados ){
 veri2++;
 incre = 0;
-}
+identificador = 0;
+b_colocados = 0;
+for(l = resl; l >= 1; l--){
+        for(k = 1; resc >= k; k++){
+        camada2 [l][k][0] = 0;
+        camada2[l][k][1] = 0;
+        }}
+for (k = 0 ; k < 21 ; k++){
+        cnum[k] = 0;}
+for (k = 0 ; k < 41 ; k++){
+        id_peca[k] = 0;}
+}}
 if (n_pecas > b_colocados && veri2 == 1000){
     printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
     exit(-1);}
@@ -637,7 +669,7 @@ printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\np
 }
 
 int main(int argc, char *argv[]){
-    int opt, opterr = 0, total, n_pecas;
+    int opt, opterr = 0, total, n_pecas, modop=1;
     float n_pecas_max;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
         switch (opt){
