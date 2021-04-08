@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
+#include <unistd.h>
 #include <time.h>
-
-int camada2[17][26][42]={}, id_peca[41] = {};
-int linha = 9, coluna = 1, resl, resc = 9, pecas1 = 0, pecas2 = 0, pecas3 = 0, pecas4 = 0, pecas5 = 0,pecas6 =0, pecas7 = 0, pecas8 = 0,  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, veri, identificador = 1;
+int camada2[17][26][42]={{{}}}, id_peca[41] = {};
+int linha = 9, coluna = 1, resl, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, veri, identificador = 1;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
@@ -39,19 +38,20 @@ void camada(int linha2,int coluna2, int peca){          //Esta função serve pa
                 if(camada2[linha2+i][coluna2+j][0] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas tenha o valor '
                 camada2[linha2+i][coluna2+j][0] = 9;           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
                 if(modod == 3){
-                    for(l = resl; l >= 1; l--){
-                        for(k = 1; resc >= k; k++){
-                camada2[l][k][identificador+1] = camada2[l][k][identificador];}}
-                camada2[linha2+i][coluna2+j][identificador] = 1;}
+                camada2[linha2+i][coluna2+j][identificador] = 11;}
                 //tabuleiro[linha2+i][coluna2+j] = '9';     //apenas para teste
                 }
                 else{
                 }}}
+for(l = resl; l >= 1; l--){
+    for(k = 1; resc >= k; k++){
+    for (i = identificador+1; i < 41; i++){
+    camada2[l][k][i] = camada2[l][k][identificador];}}}
 }
 
 void disparo(){
 int col;
-if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 1 && camada2[disp_l][disp_c][0] == 9){}
+if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9){}
 else{
 col = disp_c + '@';             //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
 tiro++;
@@ -114,38 +114,39 @@ default:{}
 }
 
 void conta_pecas(){
-int num;
-pecas1 = 0; pecas2 = 0; pecas3 = 0; pecas4 = 0; pecas5 = 0; pecas6 = 0; pecas7 = 0; pecas8 = 0;
+int num, a;
+for (a = 1; a < 9 ;a++){
+pecas_num[a] = 0;}
 for (num = 1; num <= 40; num ++){
     switch (id_peca[num]){
     case 1:
-        pecas1++;
+        pecas_num[1]++;
         break;
     case 2:
-        pecas2++;
+        pecas_num[2]++;
         break;
     case 3:
-        pecas3++;
+        pecas_num[3]++;
         break;
     case 4:
-        pecas4++;
+        pecas_num[4]++;
         break;
     case 5:
-        pecas5++;
+        pecas_num[5]++;
         break;
     case 6:
-        pecas6++;
+        pecas_num[6]++;
         break;
     case 7:
-        pecas7++;
+        pecas_num[7]++;
         break;
     case 8:
-        pecas8++;
+        pecas_num[8]++;
         break;
     default:
         break;}}
 }
-void modo_d1(){                  //Modo de disparo aleatório
+void modo_d1(){                                    //Modo de disparo aleatório
 srand(time(NULL));
 int verificador = 0;
 while(verificador == 0){
@@ -477,8 +478,8 @@ return 10;   //caso em que as peças não podem ser colocadas e portanto é reto
 }
 
 void modo_p1(){
-        int l,j, num = 0, posi = 0,contador = 0;    //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
-        srand(time(NULL));  //seed para o random
+        int l,j, num = 0, posi = 0;    //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+        srand(time(NULL));              //seed para o random
         for (l=resl; l >= 1; l-=3){
             for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
             id_peca[num] = posi;
@@ -514,21 +515,22 @@ int *aleatorios (int ini,int vari) {
 int verificador(int id,int l,int j, int incre){
 int a = 0;
     if (id==0){
-        id_peca[incre]=0;
+        barco(0,l,j);
+        id_peca[incre] = 0;
         return 0;
   }
     else if (id==1){
     int *num = aleatorios(1, 9);
     for(a=0; a < 9; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 1;
+                id_peca[incre] = 1;
                 return 1;}}}
 
     else if (id==2){
         int *num = aleatorios(12, 10);
         for(a=0; a < 10; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 2;
+                id_peca[incre] = 2;
                 return 1;}}}
 
 
@@ -543,7 +545,7 @@ int a = 0;
         int *num = aleatorios(28, 4);
         for(a=0; a < 4; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 4;
+                id_peca[incre] = 4;
                 return 1;}}}
 
 
@@ -551,7 +553,7 @@ int a = 0;
         int *num = aleatorios(32, 4);
         for(a=0; a < 4; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 5;
+                id_peca[incre] = 5;
                 return 1;}}}
 
 
@@ -559,7 +561,7 @@ int a = 0;
         int *num = aleatorios(36, 4);
         for(a=0; a < 4; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 6;
+                id_peca[incre] = 6;
                 return 1;}}}
 
 
@@ -567,13 +569,13 @@ int a = 0;
         int *num = aleatorios(40, 2);
         for(a=0; a < 2; a++) {
             if((barco(num[a],l,j)) != 10){
-                id_peca[incre]= 7;
+                id_peca[incre] = 7;
                 return 1;}}}
 
 
     else if (id==8){
         if ((barco(42,l,j)) != 10){
-            id_peca[incre]=8;
+            id_peca[incre] = 8;
         return 1;}}
 
 return 2;
@@ -581,84 +583,98 @@ return 2;
 
 
 void modo_p2 (int n_pecas){
-int i, l ,j, k, num = 0, pecas[21] = {},veri1 = 0, veri2 = 0, stop, b_colocados = 0, incre=0, rnum, cnum[21] = {};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+int a,i=0, l ,j, k, m,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+static int  b_colocados = 0;
+    pecas[0] = 0;
+    pecas[1] = 0;
     srand(time(NULL));          //seed para o random
-    for(j = 0; j < pecas1; j++){
+    for(j = 0; j < pecas_num[1]; j++){
     pecas[num] = 1;
     num++;
     }
-    for(j = 0; j < pecas2; j++){
+    for(j = 0; j < pecas_num[2]; j++){
     pecas[num] = 2;
     num++;
     }
-    for(j = 0; j < pecas3; j++){
+    for(j = 0; j < pecas_num[3]; j++){
     pecas[num] = 3;
     num++;
     }
-    for(j = 0; j < pecas4; j++){
+    for(j = 0; j < pecas_num[4]; j++){
     pecas[num] = 4;
     num++;
     }
-    for(j = 0; j < pecas5; j++){
+    for(j = 0; j < pecas_num[5]; j++){
     pecas[num] = 5;
     num++;
     }
-    for(j = 0; j < pecas6; j++){
+    for(j = 0; j < pecas_num[6]; j++){
     pecas[num] = 6;
     num++;
     }
-    for(j = 0; j < pecas7; j++){
+    for(j = 0; j < pecas_num[7]; j++){
     pecas[num] = 7;
     num++;
     }
-    for(j = 0; j < pecas8; j++){
+    for(j = 0; j < pecas_num[8]; j++){
     pecas[num] = 8;
     num++;
     }
-    rnum = num + 1;
+    rnum = num;
     num = 0;
-    while (n_pecas > b_colocados && veri2 != 1000 ){
+    while (n_pecas > b_colocados && veri2 != 1000){
     for (l=resl; l >= 1; l-=3){
+            if (veri1 == 8 || n_pecas == b_colocados){
+                break;
+            }
         for(j= 1; j < resc; j+=3){
         do {
         stop = 0;
         veri1++;
-        while(i == 0){
-        num = rand() % rnum;
-        cnum[incre] = num;
-        for (k = 0 ; k < 21 ; k++){
-            if (num == cnum[k]){
+        do{num = rand() % rnum;
+        for (k = 0 ; k < 41 ; k++){
+            if (num == cnum[k] && num != 0 && num != 1){
                 i = 0;
                 break;}
-            else {i = 1;}}}
-        stop = verificador(pecas[num],l,j,incre);}
-        while(stop == 2 && veri1 != 8);
-        if (stop == 1){
-            b_colocados++;}
-            incre++;}}
-if (n_pecas > b_colocados ){
+            else {i = 1;}}
+            cnum[incre] = num;}while(i == 0);
+        stop = verificador(pecas[num],l,j,incre);} while(stop == 2 && veri1 != 8);
+        if (stop == 0){
+        veri1 = 0;}
+        else if (stop == 1){
+            b_colocados++;
+            veri1 = 0;}
+            incre++;
+        if (veri1 == 8 || n_pecas == b_colocados){
+            break;
+        }}}
+if (n_pecas > b_colocados){
+veri1 = 0;
 veri2++;
-incre = 0;
-identificador = 0;
+total_b = 0;
+incre = 1;
+identificador = 1;
 b_colocados = 0;
 for(l = resl; l >= 1; l--){
         for(k = 1; resc >= k; k++){
-        camada2 [l][k][0] = 0;
+        camada2[l][k][0] = 0;
         camada2[l][k][1] = 0;
         }}
-for (k = 0 ; k < 21 ; k++){
+for (k = 0 ; k < 41; k++){
         cnum[k] = 0;}
-for (k = 0 ; k < 41 ; k++){
+
+for (k = 0 ; k < 41; k++){
         id_peca[k] = 0;}
 }}
 if (n_pecas > b_colocados && veri2 == 1000){
     printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
     exit(-1);}
-else{
-printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\n\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, n_pecas);
-}
-}
-
+else {
+printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\n");
+for(a=1; a < 9; a++){
+printf("peca %d --> %d\n", a, pecas_num[a]);}
+printf("\ntotal ---> %d\n", n_pecas);
+sleep(3);}}
 
  void help (char *zzz){     //colocar as intruções para usar os comandos
     /*printf("");
@@ -669,7 +685,7 @@ printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\np
 }
 
 int main(int argc, char *argv[]){
-    int opt, opterr = 0, total, n_pecas, modop=1;
+    int opt/*, opterr = 0*/, total, n_pecas, modop=1, a, p;
     float n_pecas_max;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
         switch (opt){
@@ -689,28 +705,28 @@ int main(int argc, char *argv[]){
         sscanf(optarg,"%d", &modod);
         break;
         case '1':
-        sscanf(optarg, "%d", &pecas1);
+        sscanf(optarg, "%d", &pecas_num[1]);
         break;
         case '2':
-        sscanf(optarg, "%d", &pecas2);
+        sscanf(optarg, "%d", &pecas_num[2]);
         break;
         case '3':
-        sscanf(optarg, "%d", &pecas3);
+        sscanf(optarg, "%d", &pecas_num[3]);
         break;
         case '4':
-        sscanf(optarg, "%d", &pecas4);
+        sscanf(optarg, "%d", &pecas_num[4]);
         break;
         case '5':
-        sscanf(optarg, "%d", &pecas5);
+        sscanf(optarg, "%d", &pecas_num[5]);
         break;
         case '6':
-        sscanf(optarg, "%d", &pecas6);
+        sscanf(optarg, "%d", &pecas_num[6]);
         break;
         case '7':
-        sscanf(optarg, "%d", &pecas7);
+        sscanf(optarg, "%d", &pecas_num[7]);
         break;
         case '8':
-        sscanf(optarg, "%d", &pecas8);
+        sscanf(optarg, "%d", &pecas_num[8]);
         break;
         default:{
             printf("Carater %c nao identificado", optopt);
@@ -741,18 +757,21 @@ printf("\n");
 if (modop==1){
     modo_p1();
     conta_pecas();
-    printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\npeca 1 --> %d\npeca 2 --> %d\npeca 3 --> %d\npeca 4 --> %d\npeca 5 --> %d\npeca 6 --> %d\npeca 7 --> %d\npeca 8 --> %d\n\ntotal ---> %d\n", pecas1, pecas2, pecas3 ,pecas4 ,pecas5 ,pecas6 ,pecas7 ,pecas8, pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8);
-    sleep(5);       //esperar
+    for(a=1, p=0; a < 9; a++){
+    printf("peca %d --> %d\n", a, pecas_num[a]);
+    p+=pecas_num[a];}
+    printf("\ntotal ---> %d\n", p);
+    sleep(1);       //esperar
     }
 
 else if (modop==2){
     n_pecas_max=((resl*resc/9)/2);
-    n_pecas = pecas1+pecas2+pecas3+pecas4+pecas5+pecas6+pecas7+pecas8;
-    if ( n_pecas > n_pecas_max || pecas1 < pecas2 || pecas2 < pecas3 || pecas3 < pecas4 || pecas4 < pecas5 || pecas5 < pecas6 || pecas6 < pecas7 || pecas7 < pecas8) {
+    n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+    if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8]) {
     printf("\nNúmero de peças inválido!\n");
        return -1; }
     modo_p2(n_pecas);
-    sleep(1);
+    ;
 }
     while (modod==1){
     modo_d1();
@@ -787,7 +806,7 @@ else if (modop==2){
         }
         else if (conta_b == total_b){
             modod = 0;
-            printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
+            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\n",tiro, total);}
 
 }
 return 0;
