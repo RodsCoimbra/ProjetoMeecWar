@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+
 int camada2[17][26][42]={{{}}}, id_peca[41] = {};
 int linha = 9, coluna = 1, resl, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, veri, identificador = 1;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 char letra = 'A';
 
-
 void tabu(){                //função que dá print do tabuleiro
-     system("clear");   //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
+     system("clear");       //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
      letra = 'A';
      for(linha = resl; linha >= 1; linha--){
             printf("%2d  ", linha);                             //print do número das linhas
@@ -68,7 +68,7 @@ if (tabuleiro[disp_l][disp_c] == 'x'){
     }
 else{
     printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
-    //sleep(1);                 //Esperar- Apenas para teste
+    sleep(1);                 //Esperar- Apenas para teste
 }
 }
 
@@ -508,9 +508,7 @@ int *aleatorios (int ini,int vari) {
             }
         }
     }
-    return numeros;
-
-}
+return numeros;}
 
 int verificador(int id,int l,int j, int incre){
 int a = 0;
@@ -754,6 +752,7 @@ for(; resc >= coluna; coluna++){
     letra++;
     }
 printf("\n");
+time_t inicio = time(NULL);
 if (modop==1){
     modo_p1();
     conta_pecas();
@@ -775,40 +774,38 @@ else if (modop==2){
 }
     while (modod==1){
     modo_d1();
+    time_t fim = time(NULL);
     if (tiro == total){
-        printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
+        printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",fim-inicio);
         modod = 0;
-        break;
-    }
+        break;}
     else if (conta_b == total_b){
         modod = 0;
-        printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
+        printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.",tiro, total,fim-inicio);}}
 
-}
    while (modod==2){
         modo_d2();
+        time_t fim = time(NULL);
         if (tiro == total){
-            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
+            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",fim-inicio);
             modod = 0;
             break;
         }
         else if (conta_b == total_b){
             modod = 0;
-            printf("\nAcertaste todas as pecas com %d tiros, numa matriz %d!!!\n",tiro, total);}
+            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.",tiro, total,fim-inicio);}}
 
-}
     while (modod==3){
         modo_d3();
+        time_t fim = time(NULL);
         if (tiro == total){
-            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c  \n");
+            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",fim-inicio);
             modod = 0;
             break;
         }
         else if (conta_b == total_b){
             modod = 0;
-            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\n",tiro, total);}
-
-}
+            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.",tiro, total,fim-inicio);}}
 return 0;
 }
 
