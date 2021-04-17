@@ -616,6 +616,57 @@ sleep(3);}}
     printf("");
     printf("");*/
 }
+void modoposi(int modop){
+int a,p;
+if (modop==1){
+    modo_p1();
+    conta_pecas();
+    for(a=1, p=0; a < 9; a++){
+    printf("peca %d --> %d\n", a, pecas_num[a]);
+    p+=pecas_num[a];}
+    printf("\ntotal ---> %d\n", p);
+    sleep(4);       //esperar
+    }
+
+else if (modop==2){
+    int n_pecas_max=((resl*resc/9)/2);
+    int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+    if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8]) {
+    printf("\nNúmero de peças inválido!\n");
+       exit (-1); }
+    modo_p2(n_pecas);}
+}
+
+void mododis(int inicio, int total){
+
+    while (modod==1){
+    modo_d1();
+    resultado(inicio,total);}
+
+    if (modod==2){
+        modo_d2_e_3();
+        resultado(inicio,total);}
+
+    else if (modod==3){
+        modo_d2_e_3();
+        resultado(inicio,total);}}
+
+void criartabu(){
+int linha, coluna;
+for(linha = resl; linha >= 1; linha--){
+            printf("%2d  ", linha);
+            for(coluna = 1; resc >= coluna; coluna++ ){
+                tabuleiro [linha][coluna] = '-';
+                printf("%c ", tabuleiro [linha][coluna]);
+            }
+             printf("\n");
+}
+printf("    ");
+for(coluna = 1; resc >= coluna; coluna++){
+    printf("%c ", letra);
+    letra++;
+    }
+printf("\n");}
 
 void resultado(int inicio,int total){
 time_t fim = time(NULL);
@@ -628,7 +679,7 @@ time_t fim = time(NULL);
             printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.\n",tiro, total,fim-inicio);}}
 
 int main(int argc, char *argv[]){
-    int opt, total, n_pecas, modop=1, a, p, linha, coluna;
+    int opt, total, modop=1, modoj = 2, n_pecas,a;
     opterr = 0;
     float n_pecas_max;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
@@ -641,6 +692,7 @@ int main(int argc, char *argv[]){
             return 0;  //acho que não é necessário
         break;
         case 'j': //modo de jogo
+        sscanf(optarg,"%d", &modoj);
         break;
         case 'p':
         sscanf(optarg,"%d", &modop);
@@ -681,52 +733,19 @@ int main(int argc, char *argv[]){
         exit(0);
     }
     total = resc * resl;
-    for(linha = resl; linha >= 1; linha--){
-            printf("%2d  ", linha);
-            for(coluna = 1; resc >= coluna; coluna++ ){
-                tabuleiro [linha][coluna] = '-';
-                printf("%c ", tabuleiro [linha][coluna]);
-            }
-             printf("\n");
-}
-printf("    ");
-for(coluna = 1; resc >= coluna; coluna++){
-    printf("%c ", letra);
-    letra++;
-    }
-printf("\n");
+
+if (modoj == 0){modoposi(modop);}     /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
+
+else if (modoj == 2){
 time_t inicio = time(NULL);
-if (modop==1){
-    modo_p1();
-    conta_pecas();
-    for(a=1, p=0; a < 9; a++){
-    printf("peca %d --> %d\n", a, pecas_num[a]);
-    p+=pecas_num[a];}
-    printf("\ntotal ---> %d\n", p);
-    sleep(4);       //esperar
-    }
-
-else if (modop==2){
-    n_pecas_max=((resl*resc/9)/2);
-    n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-    if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8]) {
-    printf("\nNúmero de peças inválido!\n");
-       return -1; }
-    modo_p2(n_pecas);
-}
-    while (modod==1){
-    modo_d1();
-    resultado(inicio,total);}
-
-    if (modod==2){
-        modo_d2_e_3();
-        resultado(inicio,total);}
-
-    else if (modod==3){
-        modo_d2_e_3();
-        resultado(inicio,total);}
-
-return 0;
+printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\nTabuleiro de %dx%d\t",resl,resc);
+for(a=1; a < 9; a++){
+    printf("\npeca %d --> %d ", a, pecas_num[a]);}
+    printf("\n\n");
+criartabu();
+n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+mododis(inicio, total);}
+    return 0;
 }
 
 
