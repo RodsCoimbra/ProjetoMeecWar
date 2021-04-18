@@ -4,7 +4,7 @@
 #include <time.h>
 
 int camada2[17][26][42]={{{}}}, id_peca[41] = {};
-int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, identificador = 0;
+int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, acertos = 0, identificador = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 
 
@@ -69,8 +69,9 @@ if (tabuleiro[disp_l][disp_c] == '-'){
 else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0)){
     printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);
     if(id_peca[0] == 0){
-    id_peca[0]= (int)tabuleiro[disp_l][disp_c] - 48;}                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
+    id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;}                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
     conta_b++;
+    acertos++;
     camada(disp_l,disp_c, 1);
     total_b--;}
 else{printf("Introduziu um valor impossivel\n\n");
@@ -81,6 +82,11 @@ tabu();
 }}
 
 void cruz(int k){
+if(acertos >= id_peca[0] && id_peca[0] != 0){
+    id_peca[0] = 0;
+    acertos = 9;
+}
+else{
 switch(k){
 case 0:
 disp_c +=1; disp_l -=1;   //meio
@@ -119,7 +125,7 @@ disparo();
 break;
 default:{if (id_peca[0] != 0){
 printf("Escreveu os números errados\n");
-exit(-1);
+exit(-1);}
 }}}}
 
 void conta_pecas(){
@@ -176,7 +182,8 @@ for (disp_l=resl; disp_l >= 1; disp_l-=3){
             identificador++;
             save_c = disp_c;
             num++;
-            for(k=0; k <= 9; k++){
+            acertos = 0;
+            for(k=0; k <= 9 && acertos != 9; k++){
                 cruz(k);
                 disp_c = save_c;
                 disp_l = save_l;}
