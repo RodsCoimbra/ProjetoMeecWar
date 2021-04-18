@@ -9,9 +9,9 @@
 	<getopt.h>
 	<time.h>
 
-1617065239 source:/media/sf_C/Projeto MEECWAR/main.c
+1618763115 source:/media/sf_C/Projeto MEECWAR/main.c
 	<stdio.h>
 	<stdlib.h>
-	<getopt.h>
+	<unistd.h>
 	<time.h>
 

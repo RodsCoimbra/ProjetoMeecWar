@@ -4,14 +4,14 @@
 #include <time.h>
 
 int camada2[17][26][42]={{{}}}, id_peca[41] = {};
-int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, veri, identificador = 0;
+int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, identificador = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
-char letra = 'A';
+
 
 void tabu(){                //função que dá print do tabuleiro
      int linha, coluna;
-     system("clear");       //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
-     letra = 'A';
+     //system("clear");       //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
+     char letra = 'A';
      for(linha = resl; linha >= 1; linha--){
             printf("%2d  ", linha);                             //print do número das linhas
             for(coluna = 1; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
@@ -51,30 +51,37 @@ for(l = resl; l >= 1; l--){
 }
 
 void disparo(){
-int col;
-if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9){}
+int condicao = 0;
+char col;
+if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9){}               //Serve para passar os locais que já não podem ser disparados no modo de disparo 3
 else{
-col = disp_c + '@';             //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
+col = disp_c + '@';                                                                                                 //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
 tiro++;
-if (camada2[disp_l][disp_c][0] == 0 || camada2[disp_l][disp_c][0] == 9){
-    tabuleiro[disp_l][disp_c] = 'x';}
-else{tabuleiro[disp_l][disp_c] = camada2[disp_l][disp_c][0] + '0';
-        conta_b++;
-        veri++;}
-camada2[disp_l][disp_c][0] = 10;
-tabu();
-printf("Tiro disparado em : %c%d\n",col,disp_l);
-if (tabuleiro[disp_l][disp_c] == 'x'){
+do{
+printf("Tiro disparado em : %c%d",col,disp_l);
+printf("\nEscreva o num. do barco se o pc acertou e escreva - se falhou:  ");
+condicao = 0;
+scanf(" %c", &tabuleiro[disp_l][disp_c]);
+if (tabuleiro[disp_l][disp_c] == '-'){
     printf("Acertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n\n");
+    tabuleiro[disp_l][disp_c] = 'x';
     }
-else{
-    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);}
-    //sleep(1);                 //Esperar- Apenas para teste
-}
-}
+else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0)){
+    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);
+    if(id_peca[0] == 0){
+    id_peca[0]= (int)tabuleiro[disp_l][disp_c] - 48;}                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
+    conta_b++;
+    camada(disp_l,disp_c, 1);
+    total_b--;}
+else{printf("Introduziu um valor impossivel\n\n");
+    condicao = 1;
+    }}while(condicao==1);
+camada2[disp_l][disp_c][0] = 10;                                                //Marcar que aquele local já foi atingido
+tabu();
+}}
 
-void cruz(int veri){
-switch(veri){
+void cruz(int k){
+switch(k){
 case 0:
 disp_c +=1; disp_l -=1;   //meio
 disparo();
@@ -110,9 +117,10 @@ case 8:
 disp_l -=2;               //canto inferior esquerdo
 disparo();
 break;
-default:{}
-}
-}
+default:{if (id_peca[0] != 0){
+printf("Escreveu os números errados\n");
+exit(-1);
+}}}}
 
 void conta_pecas(){
 int num, a;
@@ -160,16 +168,15 @@ disparo();
 }
 
 void modo_d2_e_3(){
-int num = 0, destruir_b, save_l, save_c, k;
-identificador = 1;
+int num = 0, destruir_b, save_l, save_c, k, veri;
+identificador = 0;
 for (disp_l=resl; disp_l >= 1; disp_l-=3){
             save_l = disp_l;
-            for(disp_c = 1; disp_c < resc && conta_b != total_b; disp_c+=3){
-            veri = 0;
+            for(disp_c = 1; disp_c < resc && conta_b < total_b; disp_c+=3){
+            identificador++;
             save_c = disp_c;
             num++;
-            destruir_b = id_peca[num];
-            for(k=0; veri != destruir_b || (destruir_b == 0 && k != 9); k++){
+            for(k=0; k <= 9; k++){
                 cruz(k);
                 disp_c = save_c;
                 disp_l = save_l;}
@@ -417,8 +424,8 @@ return 10;   //caso em que as peças não podem ser colocadas e portanto é reto
 }
 
 void modo_p1(){
-        int l,j, num = 0, posi = 0;    //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
-        srand(time(NULL));              //seed para o random
+        int l,j, num = 0, posi = 0;             //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+        srand(time(NULL));                      //seed para o random
         for (l=resl; l >= 1; l-=3){
             for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
             id_peca[num] = posi;
@@ -625,11 +632,10 @@ if (modop==1){
     printf("peca %d --> %d\n", a, pecas_num[a]);
     p+=pecas_num[a];}
     printf("\ntotal ---> %d\n", p);
-    sleep(4);       //esperar
     }
 
 else if (modop==2){
-    int n_pecas_max=((resl*resc/9)/2);
+    float n_pecas_max=((resl*resc/9)/2);
     int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
     if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8]) {
     printf("\nNúmero de peças inválido!\n");
@@ -637,21 +643,8 @@ else if (modop==2){
     modo_p2(n_pecas);}
 }
 
-void mododis(int inicio, int total){
-
-    while (modod==1){
-    modo_d1();
-    resultado(inicio,total);}
-
-    if (modod==2){
-        modo_d2_e_3();
-        resultado(inicio,total);}
-
-    else if (modod==3){
-        modo_d2_e_3();
-        resultado(inicio,total);}}
-
 void criartabu(){
+char letra = 'A';
 int linha, coluna;
 for(linha = resl; linha >= 1; linha--){
             printf("%2d  ", linha);
@@ -666,22 +659,35 @@ for(coluna = 1; resc >= coluna; coluna++){
     printf("%c ", letra);
     letra++;
     }
-printf("\n");}
+printf("\n\n");}
 
 void resultado(int inicio,int total){
 time_t fim = time(NULL);
         if (tiro == total){
             modod = 0;
-            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",fim-inicio);
+            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",(int)fim-inicio);
+            exit(-1);
         }
-        else if (conta_b == total_b){
+        else if (conta_b >= total_b){
             modod = 0;
-            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.\n",tiro, total,fim-inicio);}}
+            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.\n\n",tiro, total,(int )fim-inicio);
+            exit(-1);}}
+
+
+void mododis(int inicio, int total){
+
+    while (modod==1){
+    modo_d1();
+    resultado(inicio,total);}
+
+    if (modod==2 || modod == 3){
+        modo_d2_e_3();
+        resultado(inicio,total);}}
+
 
 int main(int argc, char *argv[]){
     int opt, total, modop=1, modoj = 2, n_pecas,a;
     opterr = 0;
-    float n_pecas_max;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
         switch (opt){
         case 't':
@@ -733,17 +739,22 @@ int main(int argc, char *argv[]){
         exit(0);
     }
     total = resc * resl;
-
+    time_t inicio = time(NULL);
 if (modoj == 0){modoposi(modop);}     /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
 
+
 else if (modoj == 2){
-time_t inicio = time(NULL);
+n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+if (n_pecas == 0){                                                  //erro por não inserir barcos
+    printf("Não inseriu a quantidade de barcos!!!\n\n");
+    return -1;
+}
 printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\nTabuleiro de %dx%d\t",resl,resc);
 for(a=1; a < 9; a++){
     printf("\npeca %d --> %d ", a, pecas_num[a]);}
     printf("\n\n");
 criartabu();
-n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
 mododis(inicio, total);}
     return 0;
 }
