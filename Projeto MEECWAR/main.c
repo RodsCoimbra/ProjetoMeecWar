@@ -8,77 +8,89 @@ int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0,
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 
 
-void tabu(){                //função que dá print do tabuleiro
+/**Função que cria um tabuleiro
+Também dá clear do tabuleiro anterior
+*/
+void tabu(){
      int linha, coluna;
-     //system("clear");       //apagar o tabuleiro anterior para nao ficar cheio de tabuleiros
+     system("clear");       //apagar o tabuleiro anterior para não ficar cheio de tabuleiros
      char letra = 'A';
      for(linha = resl; linha >= 1; linha--){
-            printf("%2d  ", linha);                             //print do número das linhas
-            for(coluna = 1; resc >= coluna; coluna++ ){             //print do tabuleiro, com condições para mudar a cor de cada especifico
-                if (tabuleiro [linha][coluna] == 'x'){
+            printf("%2d  ", linha);                                 //print do número das linhas
+            for(coluna = 1; resc >= coluna; coluna++ ){             //print do tabuleiro, com mudança de cor dependente do que tiver no espaço
+                if (tabuleiro [linha][coluna] == 'x'){              //'x' simboliza água
                 printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
                 else if (tabuleiro [linha][coluna] == '-'){
-                  printf("%c ", tabuleiro [linha][coluna]);}         //em preto caso já tenham disparado e acertou na agua
+                  printf("%c ", tabuleiro [linha][coluna]);}        //em preto o resto do tabuleiro
                 else {
                    printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);}
                 }
              printf("\n");}
     printf("    ");
     for(coluna = 1; resc >= coluna; coluna++){
-        printf("%c ", letra);                                   //print da letra das colunas
+        printf("%c ", letra);                                       //print das letras das colunas
         letra++;}
-        printf("\n\n");
-}
-void camada(int linha2,int coluna2, int peca){          //Esta função serve para simultaniamente guardar os locais dos barcos, como também para assinalar os locais onde os próximos barcos não podem ficar
+        printf("\n\n");}
+
+/**Esta função serve para guardar os locais dos barcos
+Para assinalar os locais onde os próximos barcos não podem ficar
+*/
+void camada(int linha2,int coluna2, int peca){
     int i, j,l,k;
     total_b++;
-    camada2 [linha2][coluna2][0] = peca;                   //camada 2 é o array que anotará as posições dos barcos e das posições livres
-    //tabuleiro [linha2][coluna2] = peca + '0';         //apenas para teste, caso queiras saber onde está a peça
+    camada2 [linha2][coluna2][0] = peca;                   //camada 2[][][0] é o array que anotará as posições dos barcos e das posições livres
     for(i = -1; i <= 1; i++){
             for(j=-1; j <= 1; j++){
-                if(camada2[linha2+i][coluna2+j][0] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas tenha o valor '
-                camada2[linha2+i][coluna2+j][0] = 9;           //o número 9 na segunda camada significa lugar onde já não se pode colocar barcos
+                if(camada2[linha2+i][coluna2+j][0] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas seja água que se pode colocar barco
+                camada2[linha2+i][coluna2+j][0] = 9;           //O número 9 na segunda camada significa lugar onde já não se pode colocar barcos
                 if(modod == 3){
                 camada2[linha2+i][coluna2+j][identificador] = 11;}
-                //tabuleiro[linha2+i][coluna2+j] = '9';     //apenas para teste
+                /**camada 2 [][][1-41] serve para guardar locais onde no modo de disparo 3 já não pode disparar
+                os valores do terceiro [] variam entre 1 e 41 e incrementa sempre que avança uma matriz de 3x3
+                */
                 }
                 else{
                 }}}
 for(l = resl; l >= 1; l--){
     for(k = 1; resc >= k; k++){
     for (i = identificador+1; i < 41; i++){
-    camada2[l][k][i] = camada2[l][k][identificador];}}}
+    camada2[l][k][i] = camada2[l][k][identificador];}}}         //copia camada 2 atual para todas as próximas
 }
 
+/**
+Função que diz onde é que o computador disparou e pede ao utilizador para introduzir o valores no tabuleiro
+
+*/
 void disparo(){
 int condicao = 0;
 char col;
 if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9){}               //Serve para passar os locais que já não podem ser disparados no modo de disparo 3
 else{
-col = disp_c + '@';                                                                                                 //carater a indicar a coluna, soma-se a '@' pois é o simbolo antes do 'A'
-tiro++;
+col = disp_c + '@';       //carater a indicar a coluna que o computador acertou. Como disp_c é um inteiro logo para transformar numa letra maiúscula soma-se a '@' que é o simbolo antes do 'A'
+tiro++;                   //quantidade de tiros disparados
 do{
-printf("Tiro disparado em : %c%d",col,disp_l);
+printf("\nTiro disparado em : %c%d",col,disp_l);
 printf("\nEscreva o num. do barco se o pc acertou e escreva - se falhou:  ");
 condicao = 0;
 scanf(" %c", &tabuleiro[disp_l][disp_c]);
 if (tabuleiro[disp_l][disp_c] == '-'){
-    printf("Acertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n\n");
     tabuleiro[disp_l][disp_c] = 'x';
+    tabu();
+    printf("\nAcertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n");
     }
 else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0)){
-    printf("Acertaste num \033[0;31mbarco %c\033[0;30m!\n\n", tabuleiro[disp_l][disp_c]);
+    tabu();
+    printf("\nAcertaste num \033[0;31mbarco %c\033[0;30m!\n", tabuleiro[disp_l][disp_c]);
     if(id_peca[0] == 0){
     id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;}                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
     conta_b++;
     acertos++;
     camada(disp_l,disp_c, 1);
     total_b--;}
-else{printf("Introduziu um valor impossivel\n\n");
+else{printf("Introduziu um valor impossivel\n");
     condicao = 1;
     }}while(condicao==1);
 camada2[disp_l][disp_c][0] = 10;                                                //Marcar que aquele local já foi atingido
-tabu();
 }}
 
 void cruz(int k){
@@ -174,7 +186,7 @@ disparo();
 }
 
 void modo_d2_e_3(){
-int num = 0, destruir_b, save_l, save_c, k, veri;
+int num = 0, save_l, save_c, k;
 identificador = 0;
 for (disp_l=resl; disp_l >= 1; disp_l-=3){
             save_l = disp_l;
