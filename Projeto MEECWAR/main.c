@@ -2,206 +2,281 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <getopt.h>
 
-int camada2[17][26][42]={{{}}}, id_peca[41] = {};
+int camada2[17][26][42]= {{{}}}, id_peca[41] = {};
 int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, acertos = 0, identificador = 0;
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 
 
-/**Função que cria um tabuleiro
-Também dá clear do tabuleiro anterior
+/** \brief Função que cria um tabuleiro
+* \brief Também dá clear do tabuleiro anterior
 */
-void tabu(){
-     int linha, coluna;
-     system("clear");       //apagar o tabuleiro anterior para não ficar cheio de tabuleiros
-     char letra = 'A';
-     for(linha = resl; linha >= 1; linha--){
-            printf("%2d  ", linha);                                 //print do número das linhas
-            for(coluna = 1; resc >= coluna; coluna++ ){             //print do tabuleiro, com mudança de cor dependente do que tiver no espaço
-                if (tabuleiro [linha][coluna] == 'x'){              //'x' simboliza água
-                printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);}          //cor azul para a água que ainda não foi acertada
-                else if (tabuleiro [linha][coluna] == '-'){
-                  printf("%c ", tabuleiro [linha][coluna]);}        //em preto o resto do tabuleiro
-                else {
-                   printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);}
-                }
-             printf("\n");}
+void tabu()
+{
+    int linha, coluna;
+    system("clear");       //apagar o tabuleiro anterior para não ficar cheio de tabuleiros
+    char letra = 'A';
+    for(linha = resl; linha >= 1; linha--)
+    {
+        printf("%2d  ", linha);                                 //print do número das linhas
+        for(coluna = 1; resc >= coluna; coluna++ )              //print do tabuleiro, com mudança de cor dependente do que tiver no espaço
+        {
+            if (tabuleiro [linha][coluna] == 'x')               //'x' simboliza água
+            {
+                printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);
+            }          //cor azul para a água que ainda não foi acertada
+            else if (tabuleiro [linha][coluna] == '-')
+            {
+                printf("%c ", tabuleiro [linha][coluna]);
+            }        //em preto o resto do tabuleiro
+            else
+            {
+                printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);
+            }
+        }
+        printf("\n");
+    }
     printf("    ");
-    for(coluna = 1; resc >= coluna; coluna++){
+    for(coluna = 1; resc >= coluna; coluna++)
+    {
         printf("%c ", letra);                                       //print das letras das colunas
-        letra++;}
-        printf("\n\n");}
+        letra++;
+    }
+    printf("\n\n");
+}
 
-/**Esta função serve para guardar os locais dos barcos
-Para assinalar os locais onde os próximos barcos não podem ficar
+/**\brief Esta função serve para guardar os locais dos barcos
+* \brief Para assinalar os locais onde os próximos barcos não podem ficar
 */
-void camada(int linha2,int coluna2, int peca){
+void camada(int linha2,int coluna2, int peca)
+{
     int i, j,l,k;
     total_b++;
     camada2 [linha2][coluna2][0] = peca;                   //camada 2[][][0] é o array que anotará as posições dos barcos e das posições livres
-    for(i = -1; i <= 1; i++){
-            for(j=-1; j <= 1; j++){
-                if(camada2[linha2+i][coluna2+j][0] == 0){      //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas seja água que se pode colocar barco
+    for(i = -1; i <= 1; i++)
+    {
+        for(j=-1; j <= 1; j++)
+        {
+            if(camada2[linha2+i][coluna2+j][0] == 0)       //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas seja água que se pode colocar barco
+            {
                 camada2[linha2+i][coluna2+j][0] = 9;           //O número 9 na segunda camada significa lugar onde já não se pode colocar barcos
-                if(modod == 3){
-                camada2[linha2+i][coluna2+j][identificador] = 11;}
-                /**camada 2 [][][1-41] serve para guardar locais onde no modo de disparo 3 já não pode disparar
+                if(modod == 3)
+                {
+                    camada2[linha2+i][coluna2+j][identificador] = 11;
+                }
+                /*camada 2 [][][1-41] serve para guardar locais onde no modo de disparo 3 já não pode disparar
                 os valores do terceiro [] variam entre 1 e 41 e incrementa sempre que avança uma matriz de 3x3
                 */
-                }
-                else{
-                }}}
-for(l = resl; l >= 1; l--){
-    for(k = 1; resc >= k; k++){
-    for (i = identificador+1; i < 41; i++){
-    camada2[l][k][i] = camada2[l][k][identificador];}}}         //copia camada 2 atual para todas as próximas
-}
-
-/**
-Função que diz onde é que o computador disparou e pede ao utilizador para introduzir o valores no tabuleiro
-
-*/
-void disparo(){
-int condicao = 0;
-char col;
-if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9){}               //Serve para passar os locais que já não podem ser disparados no modo de disparo 3
-else{
-col = disp_c + '@';       //carater a indicar a coluna que o computador acertou. Como disp_c é um inteiro logo para transformar numa letra maiúscula soma-se a '@' que é o simbolo antes do 'A'
-tiro++;                   //quantidade de tiros disparados
-do{
-printf("\nTiro disparado em : %c%d",col,disp_l);
-printf("\nEscreva o num. do barco se o pc acertou e escreva - se falhou:  ");
-condicao = 0;
-scanf(" %c", &tabuleiro[disp_l][disp_c]);
-if (tabuleiro[disp_l][disp_c] == '-'){
-    tabuleiro[disp_l][disp_c] = 'x';
-    tabu();
-    printf("\nAcertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n");
+            }
+            else
+            {
+            }
+        }
     }
-else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0)){
-    tabu();
-    printf("\nAcertaste num \033[0;31mbarco %c\033[0;30m!\n", tabuleiro[disp_l][disp_c]);
-    if(id_peca[0] == 0){
-    id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;}                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
-    conta_b++;
-    acertos++;
-    camada(disp_l,disp_c, 1);
-    total_b--;}
-else{printf("Introduziu um valor impossivel\n");
-    condicao = 1;
-    }}while(condicao==1);
-camada2[disp_l][disp_c][0] = 10;                                                //Marcar que aquele local já foi atingido
-}}
-
-void cruz(int k){
-if(acertos >= id_peca[0] && id_peca[0] != 0){
-    id_peca[0] = 0;
-    acertos = 9;
-}
-else{
-switch(k){
-case 0:
-disp_c +=1; disp_l -=1;   //meio
-disparo();
-break;
-case 1:
-disp_c +=1;               //centro cima
-disparo();
-break;
-case 2:
-disp_l -=2; disp_c +=1;   //centro baixo
-disparo();
-break;
-case 3:
-disp_l -=1;               //esquerda meio
-disparo();
-break;
-case 4:
-disp_c +=2; disp_l -=1;   //direita meio
-disparo();
-break;
-case 5:                   //canto superior esquerdo
-disparo();
-break;
-case 6:
-disp_c +=2; disp_l -=2;   //canto inferior direito
-disparo();
-break;
-case 7:
-disp_c +=2;               //canto superior direito
-disparo();
-break;
-case 8:
-disp_l -=2;               //canto inferior esquerdo
-disparo();
-break;
-default:{if (id_peca[0] != 0){
-printf("Escreveu os números errados\n");
-exit(-1);}
-}}}}
-
-void conta_pecas(){
-int num, a;
-for (a = 1; a < 9 ;a++){
-pecas_num[a] = 0;}
-for (num = 1; num <= 40; num ++){
-    switch (id_peca[num]){
-    case 1:
-        pecas_num[1]++;
-        break;
-    case 2:
-        pecas_num[2]++;
-        break;
-    case 3:
-        pecas_num[3]++;
-        break;
-    case 4:
-        pecas_num[4]++;
-        break;
-    case 5:
-        pecas_num[5]++;
-        break;
-    case 6:
-        pecas_num[6]++;
-        break;
-    case 7:
-        pecas_num[7]++;
-        break;
-    case 8:
-        pecas_num[8]++;
-        break;
-    default:
-        break;}}
-}
-void modo_d1(){                                    //Modo de disparo aleatório
-srand(time(NULL));
-int verificador = 0;
-while(verificador == 0){
-disp_c = (rand() % resc) +1;
-disp_l = (rand() % resl) +1;
-if (camada2[disp_l][disp_c][0] != 10){             //impedir repeticoes
-    verificador = 1;
-}}
-disparo();
+    for(l = resl; l >= 1; l--)
+    {
+        for(k = 1; resc >= k; k++)
+        {
+            for (i = identificador+1; i < 41; i++)
+            {
+                camada2[l][k][i] = camada2[l][k][identificador];
+            }
+        }
+    }         //copia camada 2 atual para todas as próximas
 }
 
-void modo_d2_e_3(){
-int num = 0, save_l, save_c, k;
-identificador = 0;
-for (disp_l=resl; disp_l >= 1; disp_l-=3){
-            save_l = disp_l;
-            for(disp_c = 1; disp_c < resc && conta_b < total_b; disp_c+=3){
+/** \brief Função que diz onde é que o computador disparou e pede ao utilizador para introduzir o valores no tabuleiro
+*/
+void disparo()
+{
+    int condicao = 0;
+    char col;
+    if(modod == 3 && camada2[disp_l][disp_c][identificador-1] == 11 && camada2[disp_l][disp_c][0] == 9) {}              //Serve para passar os locais que já não podem ser disparados no modo de disparo 3
+    else
+    {
+        col = disp_c + '@';       //carater a indicar a coluna que o computador acertou. Como disp_c é um inteiro logo para transformar numa letra maiúscula soma-se a '@' que é o simbolo antes do 'A'
+        tiro++;                   //quantidade de tiros disparados
+        do
+        {
+            printf("\nTiro disparado em : %c%d",col,disp_l);
+            printf("\nEscreva o num. do barco se o pc acertou e escreva - se falhou:\n");
+            condicao = 0;
+            scanf(" %c", &tabuleiro[disp_l][disp_c]);
+            if (tabuleiro[disp_l][disp_c] == '-')
+            {
+                tabuleiro[disp_l][disp_c] = 'x';
+                tabu();
+                printf("\nAcertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n");
+            }
+            else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0))
+            {
+                tabu();
+                printf("\nAcertaste num \033[0;31mbarco %c\033[0;30m!\n", tabuleiro[disp_l][disp_c]);
+                if(id_peca[0] == 0)
+                {
+                    id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;
+                }                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
+                conta_b++;
+                acertos++;
+                camada(disp_l,disp_c, 1);
+                total_b--;
+            }
+            else
+            {
+                printf("Introduziu um valor impossivel\n");
+                condicao = 1;
+            }
+        }
+        while(condicao==1);
+        camada2[disp_l][disp_c][0] = 10;                                                //Marcar que aquele local já foi atingido
+    }
+}
+
+void cruz(int k)
+{
+    if(acertos >= id_peca[0] && id_peca[0] != 0)
+    {
+        id_peca[0] = 0;
+        acertos = 9;
+    }
+    else
+    {
+        switch(k)
+        {
+        case 0:
+            disp_c +=1;
+            disp_l -=1;   //meio
+            disparo();
+            break;
+        case 1:
+            disp_c +=1;               //centro cima
+            disparo();
+            break;
+        case 2:
+            disp_l -=2;
+            disp_c +=1;   //centro baixo
+            disparo();
+            break;
+        case 3:
+            disp_l -=1;               //esquerda meio
+            disparo();
+            break;
+        case 4:
+            disp_c +=2;
+            disp_l -=1;   //direita meio
+            disparo();
+            break;
+        case 5:                   //canto superior esquerdo
+            disparo();
+            break;
+        case 6:
+            disp_c +=2;
+            disp_l -=2;   //canto inferior direito
+            disparo();
+            break;
+        case 7:
+            disp_c +=2;               //canto superior direito
+            disparo();
+            break;
+        case 8:
+            disp_l -=2;               //canto inferior esquerdo
+            disparo();
+            break;
+        default:
+        {
+            if (id_peca[0] != 0)
+            {
+                printf("Escreveu os números errados\n");
+                exit(-1);
+            }
+        }
+        }
+    }
+}
+
+void conta_pecas()
+{
+    int num, a;
+    for (a = 1; a < 9 ; a++)
+    {
+        pecas_num[a] = 0;
+    }
+    for (num = 1; num <= 40; num ++)
+    {
+        switch (id_peca[num])
+        {
+        case 1:
+            pecas_num[1]++;
+            break;
+        case 2:
+            pecas_num[2]++;
+            break;
+        case 3:
+            pecas_num[3]++;
+            break;
+        case 4:
+            pecas_num[4]++;
+            break;
+        case 5:
+            pecas_num[5]++;
+            break;
+        case 6:
+            pecas_num[6]++;
+            break;
+        case 7:
+            pecas_num[7]++;
+            break;
+        case 8:
+            pecas_num[8]++;
+            break;
+        default:
+            break;
+        }
+    }
+}
+void modo_d1()                                     //Modo de disparo aleatório
+{
+    srand(time(NULL));
+    int verificador = 0;
+    while(verificador == 0)
+    {
+        disp_c = (rand() % resc) +1;
+        disp_l = (rand() % resl) +1;
+        if (camada2[disp_l][disp_c][0] != 10)              //impedir repeticoes
+        {
+            verificador = 1;
+        }
+    }
+    disparo();
+}
+
+void modo_d2_e_3()
+{
+    int num = 0, save_l, save_c, k;
+    identificador = 0;
+    for (disp_l=resl; disp_l >= 1; disp_l-=3)
+    {
+        save_l = disp_l;
+        for(disp_c = 1; disp_c < resc && conta_b < total_b; disp_c+=3)
+        {
             identificador++;
             save_c = disp_c;
             num++;
             acertos = 0;
-            for(k=0; k <= 9 && acertos != 9; k++){
+            for(k=0; k <= 9 && acertos != 9; k++)
+            {
                 cruz(k);
                 disp_c = save_c;
-                disp_l = save_l;}
-                if(modod==3){
-                identificador++;}
-}}}
+                disp_l = save_l;
+            }
+            if(modod==3)
+            {
+                identificador++;
+            }
+        }
+    }
+}
 
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
     identificador++;
@@ -442,339 +517,491 @@ identificador--;
 return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
-void modo_p1(){
-        int l,j, num = 0, posi = 0;             //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
-        srand(time(NULL));                      //seed para o random
-        for (l=resl; l >= 1; l-=3){
-            for(j= 1; j < resc; j+=3){          //os "for"" servem para mexer a coordenada de posicionamento das peças
+
+void modo_p1()
+{
+    int l,j, num = 0, posi = 0;             //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
+    srand(time(NULL));                      //seed para o random
+    for (l=resl; l >= 1; l-=3)
+    {
+        for(j= 1; j < resc; j+=3)           //os "for"" servem para mexer a coordenada de posicionamento das peças
+        {
             id_peca[num] = posi;
             num++;
             contador = 0;                       //reset do contador para 0
             posi = barco(rand() % 43,l,j);      //posi é igual a 1 ou 0 dependendo da funcao barco. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
-            while(posi == 10){
+            while(posi == 10)
+            {
                 contador++;                     //incremento contador
                 posi = barco(rand() % 43,l,j);
-            }}}
-id_peca[num] = posi;
+            }
+        }
+    }
+    id_peca[num] = posi;
 }
 
-int *aleatorios (int ini,int vari) {
-    static int numeros[12]={};
+int *aleatorios (int ini,int vari)
+{
+    static int numeros[12]= {};
     int i, j, inc;
-    for (i = 0 ; i < vari ; i+= inc) {
+    for (i = 0 ; i < vari ; i+= inc)
+    {
         numeros[i]= (rand()%vari)+ini;
         inc= 1;
-        for (j= 0 ; j < i ; j++) {
-            if (numeros[i]==numeros[j]){
+        for (j= 0 ; j < i ; j++)
+        {
+            if (numeros[i]==numeros[j])
+            {
                 inc= 0;
                 break;
-            }}}
-return numeros;}
+            }
+        }
+    }
+    return numeros;
+}
 
-int verificador(int id,int l,int j, int incre){
-int a = 0;
-    if (id==0){
+int verificador(int id,int l,int j, int incre)
+{
+    int a = 0;
+    if (id==0)
+    {
         barco(0,l,j);
         id_peca[incre] = 0;
         return 0;
-  }
-    else if (id==1){
-    int *num = aleatorios(1, 9);
-    for(a=0; a < 9; a++) {
-            if((barco(num[a],l,j)) != 10){
+    }
+    else if (id==1)
+    {
+        int *num = aleatorios(1, 9);
+        for(a=0; a < 9; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 1;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
-    else if (id==2){
+    else if (id==2)
+    {
         int *num = aleatorios(12, 10);
-        for(a=0; a < 10; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 10; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 2;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
 
-    else if (id==3){
+    else if (id==3)
+    {
         int *num = aleatorios(22, 6);
-        for(a=0; a < 6; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 6; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre]= 3;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
-    else if (id==4){
+    else if (id==4)
+    {
         int *num = aleatorios(28, 4);
-        for(a=0; a < 4; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 4; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 4;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
 
-    else if (id==5){
+    else if (id==5)
+    {
         int *num = aleatorios(32, 4);
-        for(a=0; a < 4; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 4; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 5;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
 
-    else if (id==6){
+    else if (id==6)
+    {
         int *num = aleatorios(36, 4);
-        for(a=0; a < 4; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 4; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 6;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
 
-    else if (id==7){
+    else if (id==7)
+    {
         int *num = aleatorios(40, 2);
-        for(a=0; a < 2; a++) {
-            if((barco(num[a],l,j)) != 10){
+        for(a=0; a < 2; a++)
+        {
+            if((barco(num[a],l,j)) != 10)
+            {
                 id_peca[incre] = 7;
-                return 1;}}}
+                return 1;
+            }
+        }
+    }
 
 
-    else if (id==8){
-        if ((barco(42,l,j)) != 10){
+    else if (id==8)
+    {
+        if ((barco(42,l,j)) != 10)
+        {
             id_peca[incre] = 8;
-        return 1;}}
+            return 1;
+        }
+    }
 
-return 2;
+    return 2;
 }
 
 
-void modo_p2 (int n_pecas){
-int a,i=0,l,j, k,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
-static int  b_colocados = 0;
+void modo_p2 (int n_pecas)
+{
+    int a,i=0,l,j, k,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+    static int  b_colocados = 0;
     pecas[0] = 0;
     pecas[1] = 0;
     srand(time(NULL));          //seed para o random
-    for(j = 0; j < pecas_num[1]; j++){
-    pecas[num] = 1;
-    num++;
+    for(j = 0; j < pecas_num[1]; j++)
+    {
+        pecas[num] = 1;
+        num++;
     }
-    for(j = 0; j < pecas_num[2]; j++){
-    pecas[num] = 2;
-    num++;
+    for(j = 0; j < pecas_num[2]; j++)
+    {
+        pecas[num] = 2;
+        num++;
     }
-    for(j = 0; j < pecas_num[3]; j++){
-    pecas[num] = 3;
-    num++;
+    for(j = 0; j < pecas_num[3]; j++)
+    {
+        pecas[num] = 3;
+        num++;
     }
-    for(j = 0; j < pecas_num[4]; j++){
-    pecas[num] = 4;
-    num++;
+    for(j = 0; j < pecas_num[4]; j++)
+    {
+        pecas[num] = 4;
+        num++;
     }
-    for(j = 0; j < pecas_num[5]; j++){
-    pecas[num] = 5;
-    num++;
+    for(j = 0; j < pecas_num[5]; j++)
+    {
+        pecas[num] = 5;
+        num++;
     }
-    for(j = 0; j < pecas_num[6]; j++){
-    pecas[num] = 6;
-    num++;
+    for(j = 0; j < pecas_num[6]; j++)
+    {
+        pecas[num] = 6;
+        num++;
     }
-    for(j = 0; j < pecas_num[7]; j++){
-    pecas[num] = 7;
-    num++;
+    for(j = 0; j < pecas_num[7]; j++)
+    {
+        pecas[num] = 7;
+        num++;
     }
-    for(j = 0; j < pecas_num[8]; j++){
-    pecas[num] = 8;
-    num++;
+    for(j = 0; j < pecas_num[8]; j++)
+    {
+        pecas[num] = 8;
+        num++;
     }
     rnum = num;
     num = 0;
-    while (n_pecas > b_colocados && veri2 != 1000){
-    for (l=resl; l >= 1; l-=3){
-            if (veri1 == 8 || n_pecas == b_colocados){
+    while (n_pecas > b_colocados && veri2 != 1000)
+    {
+        for (l=resl; l >= 1; l-=3)
+        {
+            if (veri1 == 8 || n_pecas == b_colocados)
+            {
                 break;
             }
-        for(j= 1; j < resc; j+=3){
-        do {
-        stop = 0;
-        veri1++;
-        do{num = rand() % rnum;
-        for (k = 0 ; k < 41 ; k++){
-            if (num == cnum[k] && num != 0 && num != 1){
-                i = 0;
-                break;}
-            else {i = 1;}}
-            cnum[incre] = num;}while(i == 0);
-        stop = verificador(pecas[num],l,j,incre);} while(stop == 2 && veri1 != 8);
-        if (stop == 0){
-        veri1 = 0;}
-        else if (stop == 1){
-            b_colocados++;
-            veri1 = 0;}
-            incre++;
-        if (veri1 == 8 || n_pecas == b_colocados){
-            break;
-        }}}
-if (n_pecas > b_colocados){
-veri1 = 0;
-veri2++;
-total_b = 0;
-incre = 1;
-identificador = 1;
-b_colocados = 0;
-for(l = resl; l >= 1; l--){
-        for(k = 1; resc >= k; k++){
-        camada2[l][k][0] = 0;
-        camada2[l][k][1] = 0;
-        }}
-for (k = 0 ; k < 41; k++){
-        cnum[k] = 0;}
+            for(j= 1; j < resc; j+=3)
+            {
+                do
+                {
+                    stop = 0;
+                    veri1++;
+                    do
+                    {
+                        num = rand() % rnum;
+                        for (k = 0 ; k < 41 ; k++)
+                        {
+                            if (num == cnum[k] && num != 0 && num != 1)
+                            {
+                                i = 0;
+                                break;
+                            }
+                            else
+                            {
+                                i = 1;
+                            }
+                        }
+                        cnum[incre] = num;
+                    }
+                    while(i == 0);
+                    stop = verificador(pecas[num],l,j,incre);
+                }
+                while(stop == 2 && veri1 != 8);
+                if (stop == 0)
+                {
+                    veri1 = 0;
+                }
+                else if (stop == 1)
+                {
+                    b_colocados++;
+                    veri1 = 0;
+                }
+                incre++;
+                if (veri1 == 8 || n_pecas == b_colocados)
+                {
+                    break;
+                }
+            }
+        }
+        if (n_pecas > b_colocados)
+        {
+            veri1 = 0;
+            veri2++;
+            total_b = 0;
+            incre = 1;
+            identificador = 1;
+            b_colocados = 0;
+            for(l = resl; l >= 1; l--)
+            {
+                for(k = 1; resc >= k; k++)
+                {
+                    camada2[l][k][0] = 0;
+                    camada2[l][k][1] = 0;
+                }
+            }
+            for (k = 0 ; k < 41; k++)
+            {
+                cnum[k] = 0;
+            }
 
-for (k = 0 ; k < 41; k++){
-        id_peca[k] = 0;}
-}}
-if (n_pecas > b_colocados && veri2 == 1000){
-    printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
-    exit(-1);}
-else {
-printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\n");
-for(a=1; a < 9; a++){
-printf("peca %d --> %d\n", a, pecas_num[a]);}
-printf("\ntotal ---> %d\n", n_pecas);
-sleep(3);}}
+            for (k = 0 ; k < 41; k++)
+            {
+                id_peca[k] = 0;
+            }
+        }
+    }
+    if (n_pecas > b_colocados && veri2 == 1000)
+    {
+        printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
+        exit(-1);
+    }
+    else
+    {
+        printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\n");
+        for(a=1; a < 9; a++)
+        {
+            printf("peca %d --> %d\n", a, pecas_num[a]);
+        }
+        printf("\ntotal ---> %d\n", n_pecas);
+        sleep(3);
+    }
+}
 
- void help (char *zzz){     //colocar as intruções para usar os comandos
+void help (char *zzz)      //colocar as intruções para usar os comandos
+{
     /*printf("");
     printf("");
     printf("");
     printf("");
     printf("");*/
 }
-void modoposi(int modop){
-int a,p;
-if (modop==1){
-    modo_p1();
-    conta_pecas();
-    for(a=1, p=0; a < 9; a++){
-    printf("peca %d --> %d\n", a, pecas_num[a]);
-    p+=pecas_num[a];}
-    printf("\ntotal ---> %d\n", p);
-    }
-
-else if (modop==2){
-    float n_pecas_max=((resl*resc/9)/2);
-    int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-    if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8]) {
-    printf("\nNúmero de peças inválido!\n");
-       exit (-1); }
-    modo_p2(n_pecas);}
-}
-
-void criartabu(){
-char letra = 'A';
-int linha, coluna;
-for(linha = resl; linha >= 1; linha--){
-            printf("%2d  ", linha);
-            for(coluna = 1; resc >= coluna; coluna++ ){
-                tabuleiro [linha][coluna] = '-';
-                printf("%c ", tabuleiro [linha][coluna]);
-            }
-             printf("\n");
-}
-printf("    ");
-for(coluna = 1; resc >= coluna; coluna++){
-    printf("%c ", letra);
-    letra++;
-    }
-printf("\n\n");}
-
-void resultado(int inicio,int total){
-time_t fim = time(NULL);
-        if (tiro == total){
-            modod = 0;
-            printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",(int)fim-inicio);
-            exit(-1);
+void modoposi(int modop)
+{
+    int a,p;
+    if (modop==1)
+    {
+        modo_p1();
+        conta_pecas();
+        for(a=1, p=0; a < 9; a++)
+        {
+            printf("peca %d --> %d\n", a, pecas_num[a]);
+            p+=pecas_num[a];
         }
-        else if (conta_b >= total_b){
-            modod = 0;
-            printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.\n\n",tiro, total,(int )fim-inicio);
-            exit(-1);}}
+        printf("\ntotal ---> %d\n", p);
+    }
+
+    else if (modop==2)
+    {
+        float n_pecas_max=((resl*resc/9)/2);
+        int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+        if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
+        {
+            printf("\nNúmero de peças inválido!\n");
+            exit (-1);
+        }
+        modo_p2(n_pecas);
+    }
+}
+
+void criartabu()
+{
+    char letra = 'A';
+    int linha, coluna;
+    for(linha = resl; linha >= 1; linha--)
+    {
+        printf("%2d  ", linha);
+        for(coluna = 1; resc >= coluna; coluna++ )
+        {
+            tabuleiro [linha][coluna] = '-';
+            printf("%c ", tabuleiro [linha][coluna]);
+        }
+        printf("\n");
+    }
+    printf("    ");
+    for(coluna = 1; resc >= coluna; coluna++)
+    {
+        printf("%c ", letra);
+        letra++;
+    }
+    printf("\n\n");
+}
+
+void resultado(int inicio,int total)
+{
+    time_t fim = time(NULL);
+    if (tiro == total)
+    {
+        modod = 0;
+        printf("\nTiveste de acertar todas as coordenadas para acabar, que vergonha :c\nDemoraste %d segundos.",(int)fim-inicio);
+        exit(-1);
+    }
+    else if (conta_b >= total_b)
+    {
+        modod = 0;
+        printf("\nAcertaste todas as pecas com %d tiros, numa matriz de %d entradas!!!\nDemoraste %d segundos.\n\n",tiro, total,(int )fim-inicio);
+        exit(-1);
+    }
+}
 
 
-void mododis(int inicio, int total){
+void mododis(int inicio, int total)
+{
 
-    while (modod==1){
-    modo_d1();
-    resultado(inicio,total);}
+    while (modod==1)
+    {
+        modo_d1();
+        resultado(inicio,total);
+    }
 
-    if (modod==2 || modod == 3){
+    if (modod==2 || modod == 3)
+    {
         modo_d2_e_3();
-        resultado(inicio,total);}}
+        resultado(inicio,total);
+    }
+}
 
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
     int opt, total, modop=1, modoj = 2, n_pecas,a;
     opterr = 0;
-    while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ){
-        switch (opt){
+    while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 )
+    {
+        switch (opt)
+        {
         case 't':
-        sscanf(optarg,"%dx%d", &resl, &resc);
-        break;
+            sscanf(optarg,"%dx%d", &resl, &resc);
+            break;
         case 'h':
             help(argv[0]);
             return 0;  //acho que não é necessário
-        break;
+            break;
         case 'j': //modo de jogo
-        sscanf(optarg,"%d", &modoj);
-        break;
+            sscanf(optarg,"%d", &modoj);
+            break;
         case 'p':
-        sscanf(optarg,"%d", &modop);
-        break;
+            sscanf(optarg,"%d", &modop);
+            break;
         case 'd':
-        sscanf(optarg,"%d", &modod);
-        break;
+            sscanf(optarg,"%d", &modod);
+            break;
         case '1':
-        sscanf(optarg, "%d", &pecas_num[1]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[1]);
+            break;
         case '2':
-        sscanf(optarg, "%d", &pecas_num[2]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[2]);
+            break;
         case '3':
-        sscanf(optarg, "%d", &pecas_num[3]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[3]);
+            break;
         case '4':
-        sscanf(optarg, "%d", &pecas_num[4]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[4]);
+            break;
         case '5':
-        sscanf(optarg, "%d", &pecas_num[5]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[5]);
+            break;
         case '6':
-        sscanf(optarg, "%d", &pecas_num[6]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[6]);
+            break;
         case '7':
-        sscanf(optarg, "%d", &pecas_num[7]);
-        break;
+            sscanf(optarg, "%d", &pecas_num[7]);
+            break;
         case '8':
-        sscanf(optarg, "%d", &pecas_num[8]);
-        break;
-        default:{
+            sscanf(optarg, "%d", &pecas_num[8]);
+            break;
+        default:
+        {
             printf("Carater %c nao identificado", optopt);
-        }}}
+        }
+        }
+    }
 
-    if((resl%3) !=0 || (resc%3 != 0) || (resl < 9) || (resl > 15) || (resc < 9) || (resc> 24)){ //caso em que não são verificadas as condições corretas para criar o tabuleiro
+    if((resl%3) !=0 || (resc%3 != 0) || (resl < 9) || (resl > 15) || (resc < 9) || (resc> 24))  //caso em que não são verificadas as condições corretas para criar o tabuleiro
+    {
         printf("Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24. \n");
         exit(0);
     }
     total = resc * resl;
     time_t inicio = time(NULL);
-if (modoj == 0){modoposi(modop);}     /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
+    if (modoj == 0)
+    {
+        modoposi(modop);   /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
+    }
 
 
-else if (modoj == 2){
-n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-if (n_pecas == 0){                                                  //erro por não inserir barcos
-    printf("Não inseriu a quantidade de barcos!!!\n\n");
-    return -1;
-}
-printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\nTabuleiro de %dx%d\t",resl,resc);
-for(a=1; a < 9; a++){
-    printf("\npeca %d --> %d ", a, pecas_num[a]);}
-    printf("\n\n");
-criartabu();
-total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
-mododis(inicio, total);}
+    else if (modoj == 2)
+    {
+        n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+        if (n_pecas == 0)                                                   //erro por não inserir barcos
+        {
+            printf("Não inseriu a quantidade de barcos!!!\n\n");
+            return -1;
+        }
+        printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\n%dx%d ",resl,resc);
+        for(a=1; a < 9; a++)
+        {
+            printf(" %d ", pecas_num[a]);
+        }
+        printf("\n\n");
+        criartabu();
+        total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
+        mododis(inicio, total);
+    }
     return 0;
 }
 
