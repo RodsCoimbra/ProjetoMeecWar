@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h>  /*Bibliotecas utilizadas para que as funções precisas sejam bem utilizadas*/
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
@@ -58,7 +58,7 @@ void camada(int linha2,int coluna2, int peca)
     {
         for(j=-1; j <= 1; j++)
         {
-            if(camada2[linha2+i][coluna2+j][0] == 0)       //Os dois "for" permitem a varedura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas seja água que se pode colocar barco
+            if(camada2[linha2+i][coluna2+j][0] == 0)       //Os dois "for" permitem a varredura da área toda à volta da peça e entrará no "if" caso alguma dessas coordenadas seja água que se pode colocar barco
             {
                 camada2[linha2+i][coluna2+j][0] = 9;           //O número 9 na segunda camada significa lugar onde já não se pode colocar barcos
                 if(modod == 3)
@@ -195,7 +195,7 @@ void cruz(int k)
     }
 }
 
-void conta_pecas()
+void conta_pecas()                     // A função conta o numero de pecas pedidas pelo utilizador para seguir as regras do jogo maximo de pecas = linhas * colunas / 9.
 {
     int num, a;
     for (a = 1; a < 9 ; a++)
@@ -560,7 +560,7 @@ int *aleatorios (int ini,int vari)
     return numeros;
 }
 
-int verificador(int id,int l,int j, int incre)
+int verificador(int id,int l,int j, int incre)        // Funcao escolhe uma variante da peca pedida, tem um random para cada tipo de peca (do 1 ao 8)
 {
     int a = 0;
     if (id==0)
@@ -727,7 +727,7 @@ void modo_p2 (int n_pecas)
     }
     rnum = num;
     num = 0;
-    while (n_pecas > b_colocados && veri2 != 1000)
+    while (n_pecas > b_colocados && veri2 != 1000)      //verificacao 1000x se e possivel colocar, se este nao conseguir depois das 1000x deiste e retorna Erro
     {
         for (l=resl; l >= 1; l-=3)
         {
@@ -805,7 +805,7 @@ void modo_p2 (int n_pecas)
             }
         }
     }
-    if (n_pecas > b_colocados && veri2 == 1000)
+    if (n_pecas > b_colocados && veri2 == 1000)         //  Retorno do Erro depois das 1000 tentativas
     {
         printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
         exit(-1);
@@ -822,18 +822,28 @@ void modo_p2 (int n_pecas)
     }
 }
 
-void help (char *zzz)      //colocar as intruções para usar os comandos
+void help (char *zzz)      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
 {
-    /*printf("");
-    printf("");
-    printf("");
-    printf("");
-    printf("");*/
+    /*printf("MEEC War Game - Versao Intermedia \n -Last Update: 18/04/2021 \n");                                                 Modo de uso:
+    printf("Modo de uso:    ./wargame [argumento]          Inicializa o jogo com as carateristicas definidas nos argumentos \n         ou:     ./wargame[argumento1] [argumento2] ... [argumentoN]");
+    printf("Argumentos: \n    -h      ajuda para o utilizador\n");
+    printf("    -t      dimensões do tabuleiro");
+    printf("    -j      modo de jogo (0 a 2)");
+    printf("    -p      modo de posicionamento de peças pelo computador (1 a 2)");
+    printf("    -d      modo de disparo de peças pelo computador (1 a 3)");
+    printf("    -1      numero de pecas do tipo 1 (minimo 1)");
+    printf("    -2      numero de pecas do tipo 2");
+    printf("    -3      numero de pecas do tipo 3");
+    printf("    -4      numero de pecas do tipo 4");
+    printf("    -5      numero de pecas do tipo 5");
+    printf("    -6      numero de pecas do tipo 6");
+    printf("    -7      numero de pecas do tipo 7");
+    printf("    -8      numero de pecas do tipo 8");  */
 }
-void modoposi(int modop)
+void modoposi(int modop)             // Modo de posicionamento em que recebe a isntrucao do jogador e o tipo de posicao escolhida
 {
     int a,p;
-    if (modop==1)
+    if (modop==1)       //  Modo de posicionamento 1
     {
         modo_p1();
         conta_pecas();
@@ -845,7 +855,7 @@ void modoposi(int modop)
         printf("\ntotal ---> %d\n", p);
     }
 
-    else if (modop==2)
+    else if (modop==2)      //  Modo de posicionamento 2
     {
         float n_pecas_max=((resl*resc/9)/2);
         int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
@@ -858,7 +868,7 @@ void modoposi(int modop)
     }
 }
 
-void criartabu()
+void criartabu()        //  Funcao cria o tabuleiro  ??????????????????????????? qual a diferenca entre esta e o tabu?       ????????????????????????????????????
 {
     char letra = 'A';
     int linha, coluna;
@@ -881,9 +891,9 @@ void criartabu()
     printf("\n\n");
 }
 
-void resultado(int inicio,int total)
+void resultado(int inicio,int total)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado 
 {
-    time_t fim = time(NULL);
+    time_t fim = time(NULL);   // reset do cronometro
     if (tiro == total)
     {
         modod = 0;
@@ -916,7 +926,7 @@ void mododis(int inicio, int total)
 }
 
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
     int opt, total, modop=1, modoj = 2, n_pecas,a;
     opterr = 0;
@@ -927,41 +937,41 @@ int main(int argc, char *argv[])
         case 't':
             sscanf(optarg,"%dx%d", &resl, &resc);
             break;
-        case 'h':
+        case 'h':   // Ajuda ao utilizador
             help(argv[0]);
             return 0;  //acho que não é necessário
             break;
         case 'j': //modo de jogo
             sscanf(optarg,"%d", &modoj);
             break;
-        case 'p':
+        case 'p': // Posicionamneto
             sscanf(optarg,"%d", &modop);
             break;
-        case 'd':
+        case 'd':  // Modo de disparo
             sscanf(optarg,"%d", &modod);
             break;
-        case '1':
+        case '1':   //Peca 1
             sscanf(optarg, "%d", &pecas_num[1]);
             break;
-        case '2':
+        case '2':   //Peca 2
             sscanf(optarg, "%d", &pecas_num[2]);
             break;
-        case '3':
+        case '3':   //Peca 3
             sscanf(optarg, "%d", &pecas_num[3]);
             break;
-        case '4':
+        case '4':   //Peca 4
             sscanf(optarg, "%d", &pecas_num[4]);
             break;
-        case '5':
+        case '5':   //Peca 5
             sscanf(optarg, "%d", &pecas_num[5]);
             break;
-        case '6':
+        case '6':   //Peca 6
             sscanf(optarg, "%d", &pecas_num[6]);
             break;
-        case '7':
+        case '7':   //Peca 7
             sscanf(optarg, "%d", &pecas_num[7]);
             break;
-        case '8':
+        case '8':   //Peca 8
             sscanf(optarg, "%d", &pecas_num[8]);
             break;
         default:
@@ -981,6 +991,13 @@ int main(int argc, char *argv[])
     if (modoj == 0)
     {
         modoposi(modop);   /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
+        printf("%dx%d",resl,resc);
+        tabu();
+    }
+
+    else if (modoj == 1) {
+        printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n\n");
+
     }
 
 
@@ -1004,9 +1021,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-
-
-
-
-
-
