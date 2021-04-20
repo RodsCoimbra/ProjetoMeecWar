@@ -987,23 +987,27 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     }
     
 
-    else if (modoj == 1) { // 
+    else if (modoj == 1) {
+        int conta_b, n_pecas;
+        n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n\n");
         printf("%dx%d",resl,resc);
         criartabu();
         modoposi(modop);
-        scanf("%c%d",&col, &linha);
-        coluna = col-'@';
-        if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
-            tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
-            conta_b++;
-        }
-        else{
+        conta_b=0;
+        for (conta_b < n_pecas; conta_b++;) {
+            scanf("%c%d",&col, &linha);
+            coluna = col-'@';
+            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
+                tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
+                printf("%c\n", tabuleiro[linha][coluna]);
+            }
+            else {
+                printf("b\n");
+                conta_b--;
 
+            }
         }
-
- 
-        
         return 0;
     }
 
