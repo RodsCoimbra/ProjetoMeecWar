@@ -801,13 +801,13 @@ void modo_p2 (int n_pecas)
     }
     else
     {
-        printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\n");
+        /*printf("\n\nTodas as peças foram colocadas com sucesso! Tens:\n");
         for(a=1; a < 9; a++)
         {
             printf("peca %d --> %d\n", a, pecas_num[a]);
         }
         printf("\ntotal ---> %d\n", n_pecas);
-        sleep(3);
+        sleep(3);*/
     }
 }
 
@@ -836,17 +836,13 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     {
         modo_p1();
         conta_pecas();
-        for(a=1; a < 9; a++)
-        {
-            printf(" %d", pecas_num[a]);
-        }
-        printf("\n");
     }
 
     else if (modop==2)      //  Modo de posicionamento 2
     {
         float n_pecas_max=((resl*resc/9)/2);
         int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+        
         if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
         {
             printf("\nNúmero de peças inválido!\n");
@@ -854,6 +850,11 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
         }
         modo_p2(n_pecas);
     }
+    for(a=1; a < 9; a++)
+        {
+            printf(" %d", pecas_num[a]);
+        }
+        printf("\n");
 }
 
 void criartabu() 
@@ -987,27 +988,25 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     }
     
 
-    else if (modoj == 1) {
-        int conta_b, n_pecas;
-        n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-        printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n\n");
-        printf("%dx%d",resl,resc);
+    else if (modoj == 1) {    
+        printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
         criartabu();
         modoposi(modop);
         conta_b=0;
-        for (conta_b < n_pecas; conta_b++;) {
+        while (conta_b < total_b) {
             scanf("%c%d",&col, &linha);
             coluna = col-'@';
             if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
                 tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
                 printf("%c\n", tabuleiro[linha][coluna]);
+                conta_b++;
             }
             else {
-                printf("b\n");
-                conta_b--;
-
+                printf("-\n");
             }
         }
+        //resultado(inicio);
+        tabu();
         return 0;
     }
 
