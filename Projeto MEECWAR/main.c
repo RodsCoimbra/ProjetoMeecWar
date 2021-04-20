@@ -15,25 +15,14 @@ char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste ca
 void tabu()
 {
     int linha, coluna;
-    system("clear");       //apagar o tabuleiro anterior para não ficar cheio de tabuleiros
+    //system("clear");       //apagar o tabuleiro anterior para não ficar cheio de tabuleiros
     char letra = 'A';
     for(linha = resl; linha >= 1; linha--)
     {
-        printf("%2d  ", linha);                                 //print do número das linhas
+        printf("%2d ", linha);                                 //print do número das linhas
         for(coluna = 1; resc >= coluna; coluna++ )              //print do tabuleiro, com mudança de cor dependente do que tiver no espaço
         {
-            if (tabuleiro [linha][coluna] == 'x')               //'x' simboliza água
-            {
-                printf("\033[0;34m%c \033[0;30m", tabuleiro [linha][coluna]);
-            }          //cor azul para a água que ainda não foi acertada
-            else if (tabuleiro [linha][coluna] == '-')
-            {
-                printf("%c ", tabuleiro [linha][coluna]);
-            }        //em preto o resto do tabuleiro
-            else
-            {
-                printf("\033[0;31m%c \033[0;30m", tabuleiro [linha][coluna]);
-            }
+            printf("%c ", tabuleiro [linha][coluna]);
         }
         printf("\n");
     }
@@ -822,9 +811,9 @@ void modo_p2 (int n_pecas)
     }
 }
 
-void help (char *zzz)      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
+void help (char *help)      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
 {
-    /*printf("MEEC War Game - Versao Intermedia \n -Last Update: 18/04/2021 \n");                                                 Modo de uso:
+    printf("MEEC War Game - Versao Intermedia \n -Last Update: 18/04/2021 \n");
     printf("Modo de uso:    ./wargame [argumento]          Inicializa o jogo com as carateristicas definidas nos argumentos \n         ou:     ./wargame[argumento1] [argumento2] ... [argumentoN]");
     printf("Argumentos: \n    -h      ajuda para o utilizador\n");
     printf("    -t      dimensões do tabuleiro");
@@ -838,7 +827,7 @@ void help (char *zzz)      // Instrucoes do HELP caso seja chamado pelo identifi
     printf("    -5      numero de pecas do tipo 5");
     printf("    -6      numero de pecas do tipo 6");
     printf("    -7      numero de pecas do tipo 7");
-    printf("    -8      numero de pecas do tipo 8");  */
+    printf("    -8      numero de pecas do tipo 8");
 }
 void modoposi(int modop)             // Modo de posicionamento em que recebe a isntrucao do jogador e o tipo de posicao escolhida
 {
@@ -847,12 +836,11 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     {
         modo_p1();
         conta_pecas();
-        for(a=1, p=0; a < 9; a++)
+        for(a=1; a < 9; a++)
         {
-            printf("peca %d --> %d\n", a, pecas_num[a]);
-            p+=pecas_num[a];
+            printf(" %d", pecas_num[a]);
         }
-        printf("\ntotal ---> %d\n", p);
+        printf("\n");
     }
 
     else if (modop==2)      //  Modo de posicionamento 2
@@ -868,27 +856,17 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     }
 }
 
-void criartabu()        //  Funcao cria o tabuleiro  ??????????????????????????? qual a diferenca entre esta e o tabu?       ????????????????????????????????????
+void criartabu() 
 {
     char letra = 'A';
     int linha, coluna;
     for(linha = resl; linha >= 1; linha--)
     {
-        printf("%2d  ", linha);
         for(coluna = 1; resc >= coluna; coluna++ )
         {
             tabuleiro [linha][coluna] = '-';
-            printf("%c ", tabuleiro [linha][coluna]);
         }
-        printf("\n");
     }
-    printf("    ");
-    for(coluna = 1; resc >= coluna; coluna++)
-    {
-        printf("%c ", letra);
-        letra++;
-    }
-    printf("\n\n");
 }
 
 void resultado(int inicio,int total)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado 
@@ -928,7 +906,7 @@ void mododis(int inicio, int total)
 
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
-    int opt, total, modop=1, modoj = 2, n_pecas,a;
+    int opt, total, modop=1, modoj = 2, n_pecas,a, linha,coluna;
     opterr = 0;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 )
     {
@@ -990,10 +968,24 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     time_t inicio = time(NULL);
     if (modoj == 0)
     {
-        modoposi(modop);   /// teodósio, criei só para mostrar exemplo de modoposi, sempre que quiseres usar mete isto e disparo mete mododis(inicio,total)
         printf("%dx%d",resl,resc);
+        
+        criartabu();
+        modoposi(modop);
+        
+        for(linha = resl; linha >= 1; linha--) {
+            for(coluna = 1; resc >= coluna; coluna++ ) {
+                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
+                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
+                }
+            }
+        }
+        printf("\n");
         tabu();
+        return 0;
+
     }
+    
 
     else if (modoj == 1) {
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n\n");
