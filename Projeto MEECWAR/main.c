@@ -816,18 +816,18 @@ void help (char *help)      // Instrucoes do HELP caso seja chamado pelo identif
     printf("MEEC War Game - Versao Intermedia \n -Last Update: 18/04/2021 \n");
     printf("Modo de uso:    ./wargame [argumento]          Inicializa o jogo com as carateristicas definidas nos argumentos \n         ou:     ./wargame[argumento1] [argumento2] ... [argumentoN]");
     printf("Argumentos: \n    -h      ajuda para o utilizador\n");
-    printf("    -t      dimensões do tabuleiro");
-    printf("    -j      modo de jogo (0 a 2)");
-    printf("    -p      modo de posicionamento de peças pelo computador (1 a 2)");
-    printf("    -d      modo de disparo de peças pelo computador (1 a 3)");
-    printf("    -1      numero de pecas do tipo 1 (minimo 1)");
-    printf("    -2      numero de pecas do tipo 2");
-    printf("    -3      numero de pecas do tipo 3");
-    printf("    -4      numero de pecas do tipo 4");
-    printf("    -5      numero de pecas do tipo 5");
-    printf("    -6      numero de pecas do tipo 6");
-    printf("    -7      numero de pecas do tipo 7");
-    printf("    -8      numero de pecas do tipo 8");
+    printf("    -t      dimensões do tabuleiro\n");
+    printf("    -j      modo de jogo (0 a 2)\n");
+    printf("    -p      modo de posicionamento de peças pelo computador (1 a 2)\n");
+    printf("    -d      modo de disparo de peças pelo computador (1 a 3)\n");
+    printf("    -1      numero de pecas do tipo 1 (minimo 1)\n");
+    printf("    -2      numero de pecas do tipo 2\n");
+    printf("    -3      numero de pecas do tipo 3\n");
+    printf("    -4      numero de pecas do tipo 4\n");
+    printf("    -5      numero de pecas do tipo 5\n");
+    printf("    -6      numero de pecas do tipo 6\n");
+    printf("    -7      numero de pecas do tipo 7\n");
+    printf("    -8      numero de pecas do tipo 8\n");
 }
 void modoposi(int modop)             // Modo de posicionamento em que recebe a isntrucao do jogador e o tipo de posicao escolhida
 {
@@ -906,7 +906,8 @@ void mododis(int inicio, int total)
 
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
-    int opt, total, modop=1, modoj = 2, n_pecas,a, linha,coluna;
+    int opt, total, modop=1, modoj = 2, n_pecas,a, linha, coluna;
+    char col;
     opterr = 0;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 )
     {
@@ -969,7 +970,6 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     if (modoj == 0)
     {
         printf("%dx%d",resl,resc);
-        
         criartabu();
         modoposi(modop);
         
@@ -987,9 +987,24 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     }
     
 
-    else if (modoj == 1) {
+    else if (modoj == 1) { // 
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n\n");
+        printf("%dx%d",resl,resc);
+        criartabu();
+        modoposi(modop);
+        scanf("%c%d",&col, &linha);
+        coluna = col-'@';
+        if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
+            tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
+            conta_b++;
+        }
+        else{
 
+        }
+
+ 
+        
+        return 0;
     }
 
 
@@ -998,8 +1013,8 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
         if (n_pecas == 0)                                                   //erro por não inserir barcos
         {
-            printf("Não inseriu a quantidade de barcos!!!\n\n");
-            return -1;
+            help(argv[0]);
+            return 0; 
         }
         printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\n%dx%d ",resl,resc);
         for(a=1; a < 9; a++)
