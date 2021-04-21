@@ -9,9 +9,12 @@ int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0,
 char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
 
 
-/** \brief Função que cria um tabuleiro
-* \brief Também dá clear do tabuleiro anterior
-*/
+
+/** \brief  Função que cria um tabuleiro e  também dá clear do tabuleiro anterior
+ *
+ * \return void
+ *
+ */
 void tabu()
 {
     int linha, coluna;
@@ -34,9 +37,17 @@ void tabu()
     printf("\n\n");
 }
 
-/**\brief Esta função serve para guardar os locais dos barcos
-* \brief Para assinalar os locais onde os próximos barcos não podem ficar
-*/
+
+
+
+/** \brief Esta função serve para guardar os locais dos barcos e para assinalar os locais onde os próximos barcos não podem ficar
+ *
+ * \param linha2 int: valor da linha do barco
+ * \param coluna2 int: valor da coluna do barco
+ * \param peca int: identificador da peça
+ * \return void
+ *
+ */
 void camada(int linha2,int coluna2, int peca)
 {
     int i, j,l,k;
@@ -74,8 +85,12 @@ void camada(int linha2,int coluna2, int peca)
     }         //copia camada 2 atual para todas as próximas
 }
 
+
 /** \brief Função que diz onde é que o computador disparou e pede ao utilizador para introduzir o valores no tabuleiro
-*/
+ *
+ * \return void
+ *
+ */
 void disparo()
 {
     int condicao = 0;
@@ -106,7 +121,7 @@ void disparo()
             }
             else
             {
-                printf("Introduziu um valor impossivel\n");
+                printf("*Introduziu um valor impossivel\n");
                 condicao = 1;
             }
         }
@@ -115,6 +130,12 @@ void disparo()
     }
 }
 
+/** \brief Função que diz os locais onde disparar no modo d2 e d3
+ *
+ * \param k int
+ * \return void
+ *
+ */
 void cruz(int k)
 {
     if(acertos >= id_peca[0] && id_peca[0] != 0)
@@ -169,7 +190,7 @@ void cruz(int k)
         {
             if (id_peca[0] != 0)
             {
-                printf("Escreveu os números errados\n");
+                printf("*Escreveu os números errados\n");
                 exit(-1);
             }
         }
@@ -499,7 +520,6 @@ identificador--;
 return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
-
 void modo_p1()
 {
     int l,j, num = 0, posi = 0;             //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
@@ -789,7 +809,7 @@ void modo_p2 (int n_pecas)
     }
     if (n_pecas > b_colocados && veri2 == 1000)         //  Retorno do Erro depois das 1000 tentativas
     {
-        printf("\nErro! Nao consegui colocar as pecas. Tente outra vez \n\n");
+        printf("\n*Erro! Nao consegui colocar as pecas. Tente outra vez \n\n");
         exit(-1);
     }
     else
@@ -797,12 +817,12 @@ void modo_p2 (int n_pecas)
     }
 }
 
-void help (char *help)      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
+void help ()      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
 {
-    printf("MEEC War Game - Versao Intermedia \n -Last Update: 18/04/2021 \n");
-    printf("Modo de uso:    ./wargame [argumento]          Inicializa o jogo com as carateristicas definidas nos argumentos \n         ou:     ./wargame[argumento1] [argumento2] ... [argumentoN]");
-    printf("Argumentos: \n    -h      ajuda para o utilizador\n");
-    printf("    -t      dimensões do tabuleiro\n");
+    printf("\nMEEC War Game - Versao Intermedia\n-Last Update: 21/04/2021 \n");
+    printf("Modo de uso:./wargame[argumento1] [argumento2] ... [argumentoN] -> Inicializa o jogo com as carateristicas definidas nos argumentos");
+    printf("\nSendo os argumentos: \n    -h      ajuda para o utilizador\n");
+    printf("    -t      dimensões do tabuleiro, sendo o mínimo 9x9 e máximo 15x24. Para além disso as dimensões têm de ser divisíveis por 3.\n");
     printf("    -j      modo de jogo (0 a 2)\n");
     printf("    -p      modo de posicionamento de peças pelo computador (1 a 2)\n");
     printf("    -d      modo de disparo de peças pelo computador (1 a 3)\n");
@@ -814,6 +834,16 @@ void help (char *help)      // Instrucoes do HELP caso seja chamado pelo identif
     printf("    -6      numero de pecas do tipo 6\n");
     printf("    -7      numero de pecas do tipo 7\n");
     printf("    -8      numero de pecas do tipo 8\n");
+    printf("No modo j0[-j 0] e j1[-j 1], são necessário os argumentos:\n");
+    printf("    -t(a sua omissão assume um tabuleiro 9x9)\n");
+    printf("    -p[1 ou 2](caso seja o 2 é necessário os argumentos das peças[-1 a -8] também)\n");
+    printf("No modo j2, só é necessário os argumentos:\n");
+    printf("    -t(a sua omissão assume um tabuleiro 9x9)\n");
+    printf("    -d[1 a 3]\n");
+    printf("    [-1 a -8]\n");
+    printf("    (-p a inclusão deste argumento não afetará em nada o modo de jogo 2\n");
+    printf("A inclusão de qualquer argumento não necessário levará a erro.\n");
+    exit(-1);
 }
 
 /** \brief
@@ -827,6 +857,12 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     int a;
     if (modop==1)       //  Modo de posicionamento 1
     {
+        int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+        if (n_pecas != 0)                                                   //erro por não inserir barcos
+        {
+            printf("\n*Nao pode meter a quantidade de pecas no modo p1!\n");
+            help();
+        }
         modo_p1();
         conta_pecas();
     }
@@ -835,19 +871,23 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     {
         float n_pecas_max=((resl*resc/9)/2);
         int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-
+        if (n_pecas == 0)                                                   //erro por não inserir barcos
+        {
+            printf("\n*Tem de meter a quantidade de pecas no modo p2!\n");
+            exit(-1);
+        }
         if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
         {
-            printf("\nNúmero de peças inválido!\n");
+            printf("\n*Número de peças inválido!\n");
             exit (-1);
         }
         modo_p2(n_pecas);
     }
     for(a=1; a < 9; a++)
-        {
-            printf(" %d", pecas_num[a]);
-        }
-        printf("\n");
+    {
+        printf(" %d", pecas_num[a]);
+    }
+    printf("\n");
 }
 
 void resultado(int inicio)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado
@@ -863,14 +903,15 @@ void resultado(int inicio)      // Retorno de informacao relativa ao modo de jog
 }
 
 
-void mododis(int inicio, int total)
+void mododis(int inicio)
 {
 
     while (modod==1)
     {
         modo_d1();
         resultado(inicio);
-        if (conta_b >= total_b){
+        if (conta_b >= total_b)
+        {
             exit(-1);
         }
     }
@@ -886,7 +927,8 @@ void mododis(int inicio, int total)
 
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
-    int opt, total, modop=1, modoj = 2, n_pecas,a, linha, coluna;
+    int opt, modop=1, modoj = 0, n_pecas,a, linha, coluna;
+    float n_pecas_max;
     char col;
     opterr = 0;
     while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 )
@@ -897,7 +939,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             sscanf(optarg,"%dx%d", &resl, &resc);
             break;
         case 'h':   // Ajuda ao utilizador
-            help(argv[0]);
+            help();
             return 0;  //acho que não é necessário
             break;
         case 'j': //modo de jogo
@@ -935,17 +977,16 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             break;
         default:
         {
-            printf("Carater %c nao identificado", optopt);
+            printf("*Carater %c nao identificado", optopt);
         }
         }
     }
 
     if((resl%3) !=0 || (resc%3 != 0) || (resl < 9) || (resl > 15) || (resc < 9) || (resc> 24))  //caso em que não são verificadas as condições corretas para criar o tabuleiro
     {
-        printf("Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24. \n");
+        printf("*Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24. \n");
         return (-1);
     }
-    total = resc * resl;
 
     for(linha = resl; linha >= 1; linha--)              //Meter o tabuleiro todo com '-'
     {
@@ -960,9 +1001,12 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     {
         printf("%dx%d",resl,resc);
         modoposi(modop);
-        for(linha = resl; linha >= 1; linha--) {
-            for(coluna = 1; resc >= coluna; coluna++ ) {
-                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
+        for(linha = resl; linha >= 1; linha--)
+        {
+            for(coluna = 1; resc >= coluna; coluna++ )
+            {
+                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8)
+                {
                     tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
                 }
             }
@@ -974,29 +1018,29 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     }
 
 
-    else if (modoj == 1) {
+    else if (modoj == 1)
+    {
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
         modoposi(modop);
-        /*for(linha = resl; linha >= 1; linha--) {
-            for(coluna = 1; resc >= coluna; coluna++ ) {
-                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
-                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';}}}
-        tabu();*/
         conta_b=0;
-        while (conta_b < total_b) {
+        while (conta_b < total_b)
+        {
             scanf(" %c%d", &col, &linha);
             coluna = col-'@';
-            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
+            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8)
+            {
                 tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
                 printf("%c\n", tabuleiro[linha][coluna]);
                 conta_b++;
                 camada2[linha][coluna][0] = 12;
                 tiro++;
             }
-            else if(camada2[linha][coluna][0] == 12){
-                printf("Já disparou aqui!!!\n");
+            else if(camada2[linha][coluna][0] == 12)
+            {
+                printf("*Já disparou aqui!!!\n");
             }
-            else {
+            else
+            {
                 printf("-\n");
                 camada2[linha][coluna][0] = 12;
                 tiro++;
@@ -1009,11 +1053,17 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
 
     else if (modoj == 2)
     {
+        n_pecas_max=((resl*resc/9)/2);
         n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
         if (n_pecas == 0)                                                   //erro por não inserir barcos
         {
-            help(argv[0]);
+            printf("*Tem de meter a quantidade de pecas no modo j2!\n");
             return -1;
+        }
+        if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
+        {
+            printf("*Número de peças inválido!\n");
+            exit (-1);
         }
         printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\n%dx%d ",resl,resc);
         for(a=1; a < 9; a++)
@@ -1022,7 +1072,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         }
         printf("\n");
         total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
-        mododis(inicio, total);
+        mododis(inicio);
     }
     return 0;
 }
