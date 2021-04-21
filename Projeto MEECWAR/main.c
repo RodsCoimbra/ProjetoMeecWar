@@ -5,8 +5,9 @@
 #include <getopt.h>
 
 int camada2[17][26][42]= {{{}}}, id_peca[41] = {};
-int resl=9, resc = 9, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, acertos = 0, identificador = 0;
-char tabuleiro [16][25]; //array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja, as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].
+int resl=9/**reset da linha, guarda sempre o seu valor*/, resc = 9 /**reset da coluna*/, pecas_num[9] = {0},  contador = 0, modod = 1, total_b = 0, conta_b = 0, tiro = 0, disp_c,disp_l, acertos = 0, identificador = 0;
+char tabuleiro [16][25]; /*array que conterá os espaços do tabuleiro. Neste caso o array tem uma dimensão acima tanto nas linhas como nas colunas para facilitar a utilização no código, ou seja,
+                         as coordenadas correspondem exatamente com o array, deixando de parte a linha 0 e coluna 0 do array. Por exemplo A9 = tabuleiro [9][1] e não [8][0].*/
 
 
 
@@ -21,7 +22,7 @@ void tabu()
     char letra = 'A';
     for(linha = resl; linha >= 1; linha--)
     {
-        printf("%2d ", linha);                                 //print do número das linhas
+        printf("%2d ", linha);                                  //print do número das linhas
         for(coluna = 1; resc >= coluna; coluna++ )              //print do tabuleiro, com mudança de cor dependente do que tiver no espaço
         {
             printf("%c ", tabuleiro [linha][coluna]);
@@ -62,11 +63,9 @@ void camada(int linha2,int coluna2, int peca)
                 camada2[linha2+i][coluna2+j][0] = 9;           //O número 9 na segunda camada significa lugar onde já não se pode colocar barcos
                 if(modod == 3)
                 {
-                    camada2[linha2+i][coluna2+j][identificador] = 11;
+                    camada2[linha2+i][coluna2+j][identificador] = 11;   /*camada 2 [][][1-41] serve para guardar locais onde no modo de disparo 3 já não pode disparar
+                                                                        os valores do terceiro [] variam entre 1 e 41 e incrementa sempre que avança uma matriz de 3x3*/
                 }
-                /*camada 2 [][][1-41] serve para guardar locais onde no modo de disparo 3 já não pode disparar
-                os valores do terceiro [] variam entre 1 e 41 e incrementa sempre que avança uma matriz de 3x3
-                */
             }
             else
             {
@@ -79,10 +78,10 @@ void camada(int linha2,int coluna2, int peca)
         {
             for (i = identificador+1; i < 41; i++)
             {
-                camada2[l][k][i] = camada2[l][k][identificador];
+                camada2[l][k][i] = camada2[l][k][identificador];            //copia camada 2 atual para todas as próximas
             }
         }
-    }         //copia camada 2 atual para todas as próximas
+    }
 }
 
 
@@ -105,90 +104,90 @@ void disparo()
             printf("%c%d\n",col,disp_l);
             condicao = 0;
             scanf(" %c", &tabuleiro[disp_l][disp_c]);
-            if (tabuleiro[disp_l][disp_c] == '-')
+            if (tabuleiro[disp_l][disp_c] == '-')            //se for água não faz nada
             {
             }
             else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0))
             {
                 if(id_peca[0] == 0)
                 {
-                    id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;
-                }                                       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
-                conta_b++;
-                acertos++;
-                camada(disp_l,disp_c, 1);
-                total_b--;
+                    id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;       //48 equivale a 0 em char, logo isto passa para id_peca[0] o número inserido pelo jogador
+                }
+                conta_b++;                                    //aumenta quantos barcos foram acertados no total
+                acertos++;                                    //aumenta a quantidade do barco da matriz 3x3, assim quando esse número for igual ao número do barco ele para no disparo 2 e 3
+                camada(disp_l,disp_c, 1);                     //para saber os lados dos barcos para passar à frente no modo d3
+                total_b--;                                    //como a função camada incrementa o total de barcos para os modos -p aqui foi necessário retirar
             }
             else
             {
                 printf("*Introduziu um valor impossivel\n");
-                condicao = 1;
+                condicao = 1;                                //Caso em que o jogador não introduz um valor possivel e portanto a condição fica igual a 1 para repetir o pedido das coordenadas
             }
         }
         while(condicao==1);
-        camada2[disp_l][disp_c][0] = 10;                                                //Marcar que aquele local já foi atingido
+        camada2[disp_l][disp_c][0] = 10;                                                //Aquele local fica a 10 para dizer que já foi atingido
     }
 }
 
 /** \brief Função que diz os locais onde disparar no modo d2 e d3
  *
- * \param k int: Indica em qual dos tiros na matriz 3x3 ele está.
+ * \param k int: Indica em qual tiro da sequência da matriz 3x3 ele está.
  * \return void
  *
  */
 void cruz(int k)
 {
-    if(acertos >= id_peca[0] && id_peca[0] != 0)
+    if(acertos >= id_peca[0] && id_peca[0] != 0)    //Serve para parar quando o barco já acertou em todos as peças daquela matriz 3x3, caso seja uma matriz nula ele só para quando acabar toda
     {
         id_peca[0] = 0;
-        acertos = 9;
+        acertos = 9;                                //Serve apenas para terminar o for no modo_d2_e_3
     }
     else
     {
         switch(k)
         {
-        case 0:
+        case 0:                       //meio
             disp_c +=1;
-            disp_l -=1;   //meio
+            disp_l -=1;
             disparo();
             break;
-        case 1:
-            disp_c +=1;               //centro cima
+        case 1:                       //centro cima
+            disp_c +=1;
             disparo();
             break;
-        case 2:
+        case 2:                       //centro baixo
             disp_l -=2;
-            disp_c +=1;   //centro baixo
+            disp_c +=1;
             disparo();
             break;
-        case 3:
-            disp_l -=1;               //esquerda meio
+        case 3:                       //esquerda meio
+            disp_l -=1;
             disparo();
             break;
-        case 4:
+        case 4:                       //direita meio
             disp_c +=2;
-            disp_l -=1;   //direita meio
+            disp_l -=1;
             disparo();
             break;
-        case 5:                   //canto superior esquerdo
+        case 5:                       //canto superior esquerdo
             disparo();
             break;
-        case 6:
+        case 6:                       //canto inferior direito
             disp_c +=2;
-            disp_l -=2;   //canto inferior direito
+            disp_l -=2;
             disparo();
             break;
-        case 7:
-            disp_c +=2;               //canto superior direito
+        case 7:                       //canto superior direito
+            disp_c +=2;
             disparo();
             break;
-        case 8:
-            disp_l -=2;               //canto inferior esquerdo
+        case 8:                       //canto inferior esquerdo
+            disp_l -=2;
             disparo();
             break;
         default:
         {
-            if (id_peca[0] != 0)
+            if (id_peca[0] != 0)                //Caso em que o número de peças acertadas na matriz 3x3 não corresponde ao dado pelo utilizador
             {
                 printf("*Escreveu os números errados\n");
                 exit(-1);
@@ -203,14 +202,14 @@ void cruz(int k)
  * \return void
  *
  */
-void conta_pecas()                     // A função conta o numero de pecas pedidas pelo utilizador para seguir as regras do jogo maximo de pecas = linhas * colunas / 9.
+void conta_pecas()
 {
     int num, a;
     for (a = 1; a < 9 ; a++)
     {
-        pecas_num[a] = 0;
+        pecas_num[a] = 0;                       //resetar qualquer valor que possa ter sido introduzido por um utilizador
     }
-    for (num = 1; num <= 40; num ++)
+    for (num = 1; num <= 40; num ++)            //40, porque é o máximo de peças que um tabuleiro 15x24 pode ter no modo p1
     {
         switch (id_peca[num])
         {
@@ -256,8 +255,8 @@ void modo_d1()
     int verificador = 0;
     while(verificador == 0)
     {
-        disp_c = (rand() % resc) +1;
-        disp_l = (rand() % resl) +1;
+        disp_c = (rand() % resc) +1;                        //número aleatório entre 1 e o número de colunas
+        disp_l = (rand() % resl) +1;                        //número aleatório entre 1 e o número de linhas
         if (camada2[disp_l][disp_c][0] != 10)              //impedir repeticoes
         {
             verificador = 1;
@@ -278,21 +277,21 @@ void modo_d2_e_3()
     for (disp_l=resl; disp_l >= 1; disp_l-=3)
     {
         save_l = disp_l;
-        for(disp_c = 1; disp_c < resc && conta_b < total_b; disp_c+=3)
+        for(disp_c = 1; disp_c < resc && conta_b < total_b; disp_c+=3)          //Serve como localizador da matriz 3x3 que o pc está a disparar, percorrendo o campo horizontalmente e depois descendo 3 linhas e repetindo
         {
             identificador++;
             save_c = disp_c;
             num++;
             acertos = 0;
-            for(k=0; k <= 9 && acertos != 9; k++)
+            for(k=0; k <= 9 && acertos != 9; k++)           //Função que faz parar caso o pc acerte em todos as peças naquela matriz 3x3
             {
                 cruz(k);
-                disp_c = save_c;
+                disp_c = save_c;                            //Reset dos valores das linhas e colunas de  disparo
                 disp_l = save_l;
             }
             if(modod==3)
             {
-                identificador++;
+                identificador++;                            //Aumenta o identificador apenas no modo d3 para ser usado para identificar quais os locais que deixam de ser necessários acertar devido a estarem ao lado de um barco
             }
         }
     }
@@ -540,9 +539,9 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
             return 8;}}
     //Fim peças 8
-    }
-    identificador--;
-    return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
+}
+identificador--;
+return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
 /** \brief Função que cria peças random para o modo_p1
@@ -558,10 +557,10 @@ void modo_p1()
     {
         for(j= 1; j < resc; j+=3)           //os "for"" servem para mexer a coordenada de posicionamento das peças
         {
-            id_peca[num] = posi;
+            id_peca[num] = posi;                //guarda o valor dos posi no id_peca, sendo id_peca[0]=0 e o resto segue a ordem com que foram colocados os barcos o primeiro é 0 e o resto depende do tabuleiro
             num++;
             contador = 0;                       //reset do contador para 0
-            posi = barco(rand() % 43,l,j);      //posi é igual a 1 ou 0 dependendo da funcao barco. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
+            posi = barco(rand() % 43,l,j);      //posi é igual ao identificador da peça colocada, ou 10 se não conseguir colocar. A função barco é chamada com a ref igual a um numero random entre 0 a 42.
             while(posi == 10)
             {
                 contador++;                     //incremento contador
@@ -572,7 +571,7 @@ void modo_p1()
     id_peca[num] = posi;
 }
 
-/** \brief Fazer números aleatórios, sem repetição
+/** \brief Fazer números aleatórios, sem repetição para ser usado no verificador
  *
  * \param ini int: Número minimo para o número aleatório
  * \param vari int: Número da variação do random
@@ -585,11 +584,11 @@ int *aleatorios (int ini,int vari)
     int i, j, inc;
     for (i = 0 ; i < vari ; i+= inc)
     {
-        numeros[i]= (rand()%vari)+ini;
+        numeros[i]= (rand()%vari)+ini;          //número terá o minimo ini e varia entre ini e ini + (vari-1)
         inc= 1;
         for (j= 0 ; j < i ; j++)
         {
-            if (numeros[i]==numeros[j])
+            if (numeros[i]==numeros[j])         //caso em que se repete e portanto o inc fica 0 para voltar a meter na mesma posição do array um novo número
             {
                 inc= 0;
                 break;
@@ -614,7 +613,7 @@ int verificador(int id,int l,int j, int incre)
     if (id==0)
     {
         barco(0,l,j);
-        id_peca[incre] = 0;
+        id_peca[incre] = 0;        //matriz nula
         return 0;
     }
     else if (id==1)
@@ -622,14 +621,14 @@ int verificador(int id,int l,int j, int incre)
         int *num = aleatorios(1, 9);
         for(a=0; a < 9; a++)
         {
-            if((barco(num[a],l,j)) != 10)
+            if((barco(num[a],l,j)) != 10)           //tenta meter o barco, caso não consiga ele experimenta todas as outras posições dessa peça
             {
-                id_peca[incre] = 1;
+                id_peca[incre] = 1;                 //mete o número correspodente ao identificador da peça no id_peca
                 return 1;
             }
         }
     }
-
+                                                    //o resto da função segue o mesmo padrão da primeira
     else if (id==2)
     {
         int *num = aleatorios(12, 10);
@@ -722,12 +721,13 @@ int verificador(int id,int l,int j, int incre)
         }
     }
 
-    return 2;
+    return 2;                           //Retorna 2 caso não consiga meter nenhuma das variantes daquela peça
 }
 
+
 /** \brief
+ *
  * \param n_pecas int: Quantidade total de pecas desde o tipo 1 ao 8
- * \param
  * \return void
  *
  */
@@ -868,10 +868,8 @@ void modo_p2 (int n_pecas)
     }
 }
 
-/** \brief Função que ajuda o jogador a saber que comandos utilizar para usar de forma correta o programa, quando invocada com o "-h" 
+/** \brief Função que ajuda o jogador a saber que comandos utilizar para usar de forma correta o programa, quando invocada com o "-h"
  *
- * \param Nao recebe nenhuma variavel 
- * \param
  * \return void
  *
  */
@@ -910,7 +908,7 @@ void help ()
  * \return void
  *
  */
-void modoposi(int modop)             
+void modoposi(int modop)
 {
     int a;
     if (modop==1)       //  Modo de posicionamento 1
@@ -921,7 +919,7 @@ void modoposi(int modop)
             printf("\n*Nao pode meter a quantidade de pecas no modo p1!\n");
             help();
         }
-        modo_p1(); 
+        modo_p1();
         conta_pecas();
     }
 
@@ -950,7 +948,7 @@ void modoposi(int modop)
 
 /** \brief Funcao que mostra a informacao relativa ao modo de jogo 2, numero de tiros, tempo demorado e tabuleiro final
  *
- * \param inicio int:  
+ * \param inicio int: Valor do tempo que em que o jogo começa
  * \return void
  *
  */
@@ -969,7 +967,7 @@ void resultado(int inicio)
 
 /** \brief Função que executa o modo de disparo (1,2 ou 3) escolhido pelo jogador ao iniciar o programa
  *
- * \param inicio int
+ * \param inicio int: Valor do tempo que em que o jogo começa
  * \return void
  *
  */
@@ -1079,7 +1077,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        default:    // Mostra a mensagem se for escrito um carater sem sentido no programa  
+        default:    // Mostra a mensagem se for escrito um carater sem sentido no programa
         {
             printf("*Carater %c nao identificado", optopt);
             help();
@@ -1093,7 +1091,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         help();
     }
 
-    for(linha = resl; linha >= 1; linha--)              // Preenche o tabuleiro com "-" 
+    for(linha = resl; linha >= 1; linha--)              // Preenche o tabuleiro com "-"
     {
         for(coluna = 1; resc >= coluna; coluna++ )
         {

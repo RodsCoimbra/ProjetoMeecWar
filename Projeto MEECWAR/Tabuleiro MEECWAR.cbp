@@ -20,7 +20,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-j 2 -d 3 -t15x24 -1 2 -2 2 -3 2 -4 1 -5 1 -6 1 -7 1 -8 1" />
+				<Option parameters="-j 2 -p 1 -d 3 -11" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
