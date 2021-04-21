@@ -40,7 +40,7 @@ void tabu()
 
 
 
-/** \brief Esta função serve para guardar os locais dos barcos e para assinalar os locais onde os próximos barcos não podem ficar
+/** \brief Esta função serve para guardar os locais dos barcos, os seus tipos e para assinalar os locais onde os próximos barcos não podem ficar
  *
  * \param linha2 int: valor da linha do barco
  * \param coluna2 int: valor da coluna do barco
@@ -132,7 +132,7 @@ void disparo()
 
 /** \brief Função que diz os locais onde disparar no modo d2 e d3
  *
- * \param k int
+ * \param k int: Indica em qual dos tiros na matriz 3x3 ele está.
  * \return void
  *
  */
@@ -198,6 +198,11 @@ void cruz(int k)
     }
 }
 
+/** \brief Função que diz quantos barcos foram criados no modo p1 e de que tipo são.
+ *
+ * \return void
+ *
+ */
 void conta_pecas()                     // A função conta o numero de pecas pedidas pelo utilizador para seguir as regras do jogo maximo de pecas = linhas * colunas / 9.
 {
     int num, a;
@@ -238,7 +243,14 @@ void conta_pecas()                     // A função conta o numero de pecas ped
         }
     }
 }
-void modo_d1()                                     //Modo de disparo aleatório
+
+
+/** \brief Modo de disparo aleatório(-d 1)
+ *
+ * \return void
+ *
+ */
+void modo_d1()
 {
     srand(time(NULL));
     int verificador = 0;
@@ -254,6 +266,11 @@ void modo_d1()                                     //Modo de disparo aleatório
     disparo();
 }
 
+/** \brief Função para o modo de disparo no formato pedido para -d 2 e -d 3
+ *
+ * \return void
+ *
+ */
 void modo_d2_e_3()
 {
     int num = 0, save_l, save_c, k;
@@ -281,6 +298,14 @@ void modo_d2_e_3()
     }
 }
 
+/** \brief Função que cria um barco a partir da referência e da posição indicada caso esta não tenha nenhuma peça ao lado
+ *
+ * \param ref int: Identificador global do barco que se pretende colocar
+ * \param l int: Linha onde se quer colocar o barco
+ * \param j int: Coluna onde se quer colocar o barco
+ * \return int: Identificador da peça ou 10 caso não consiga meter a peça pedida
+ *
+ */
 int barco(int ref, int l, int j){      //Função que identifica todos os barcos pelo identificador global de cada peça
     identificador++;
     if(contador == 3){                  //contador da função modo_p1 que quando igual a 3 considera a peça 1 centrada(ref=5)
@@ -520,6 +545,11 @@ identificador--;
 return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
+/** \brief Função que cria peças random para o modo_p1
+ *
+ * \return void
+ *
+ */
 void modo_p1()
 {
     int l,j, num = 0, posi = 0;             //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e posi que é zero se a posição do barco for inválida e 1 se for válida
@@ -542,6 +572,13 @@ void modo_p1()
     id_peca[num] = posi;
 }
 
+/** \brief Fazer números aleatórios, sem repetição
+ *
+ * \param ini int: Número minimo para o número aleatório
+ * \param vari int: Número da variação do random
+ * \return Retorna o número
+ *
+ */
 int *aleatorios (int ini,int vari)
 {
     static int numeros[12]= {};
@@ -562,7 +599,16 @@ int *aleatorios (int ini,int vari)
     return numeros;
 }
 
-int verificador(int id,int l,int j, int incre)        // Funcao escolhe uma variante da peca pedida, tem um random para cada tipo de peca (do 1 ao 8)
+/** \brief Função que escolhe uma variante da peca pedida, tem um random para cada tipo de peca (do 1 ao 8)
+ *
+ * \param id int: Identificador da peça
+ * \param l int: linha para mandar para a função barco
+ * \param j int: coluna para mandar para a função barco
+ * \param incre int: número que sobe à medida que o localizador da matriz 3x3 avança
+ * \return int: retorna 0 se for uma matriz vazia, 1 se for uma peça e 2 se não conseguir colocar uma peça
+ *
+ */
+int verificador(int id,int l,int j, int incre)
 {
     int a = 0;
     if (id==0)
@@ -679,7 +725,13 @@ int verificador(int id,int l,int j, int incre)        // Funcao escolhe uma vari
     return 2;
 }
 
-
+/** \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
 void modo_p2 (int n_pecas)
 {
     int i=0,l,j, k,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
@@ -817,6 +869,13 @@ void modo_p2 (int n_pecas)
     }
 }
 
+/** \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
 void help ()      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
 {
     printf("\nMEEC War Game - Versao Intermedia\n-Last Update: 21/04/2021 \n");
@@ -890,6 +949,12 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     printf("\n");
 }
 
+/** \brief
+ *
+ * \param inicio int
+ * \return void
+ *
+ */
 void resultado(int inicio)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado
 {
     time_t fim = time(NULL);   // reset do cronometro
@@ -897,12 +962,18 @@ void resultado(int inicio)      // Retorno de informacao relativa ao modo de jog
     if (conta_b >= total_b)
     {
         modod = 0;
-        printf("\nFim de Jogo: %d jogadas em %d segundos\n",tiro, (int )fim-inicio);
+        printf("\nFim de Jogo: %d jogadas em %d segundos\n",tiro, (int)fim-inicio);
         tabu();
     }
 }
 
 
+/** \brief
+ *
+ * \param inicio int
+ * \return void
+ *
+ */
 void mododis(int inicio)
 {
 
@@ -912,7 +983,7 @@ void mododis(int inicio)
         resultado(inicio);
         if (conta_b >= total_b)
         {
-            exit(-1);
+            exit(0);
         }
     }
 
@@ -920,14 +991,14 @@ void mododis(int inicio)
     {
         modo_d2_e_3();
         resultado(inicio);
-        exit(-1);
+        exit(0);
     }
 }
 
 
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
-    int opt, modop=1, modoj = 0, n_pecas,a, linha, coluna;
+    int opt, modop=1, modoj = 0, n_pecas,a, linha, coluna, mod = 0;
     float n_pecas_max;
     char col;
     opterr = 0;
@@ -944,48 +1015,83 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             break;
         case 'j': //modo de jogo
             sscanf(optarg,"%d", &modoj);
+            if(modoj > 2 || modoj < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case 'p': // Posicionamneto
             sscanf(optarg,"%d", &modop);
+            if(modop > 2 || modop < 1){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case 'd':  // Modo de disparo
             sscanf(optarg,"%d", &modod);
+            if(modod > 3 || modod < 1){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
+            mod = 1;
             break;
         case '1':   //Peca 1
             sscanf(optarg, "%d", &pecas_num[1]);
+            if(pecas_num[1] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '2':   //Peca 2
             sscanf(optarg, "%d", &pecas_num[2]);
+            if(pecas_num[2] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '3':   //Peca 3
             sscanf(optarg, "%d", &pecas_num[3]);
+            if(pecas_num[3] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '4':   //Peca 4
             sscanf(optarg, "%d", &pecas_num[4]);
+            if(pecas_num[4] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '5':   //Peca 5
             sscanf(optarg, "%d", &pecas_num[5]);
+            if(pecas_num[5] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '6':   //Peca 6
             sscanf(optarg, "%d", &pecas_num[6]);
+            if(pecas_num[6] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '7':   //Peca 7
             sscanf(optarg, "%d", &pecas_num[7]);
+            if(pecas_num[7] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         case '8':   //Peca 8
             sscanf(optarg, "%d", &pecas_num[8]);
+            if(pecas_num[8] < 0){
+            printf("*Erro na introdução de argumento.\n");
+            help();}
             break;
         default:
         {
             printf("*Carater %c nao identificado", optopt);
+            help();
         }
         }
     }
 
     if((resl%3) !=0 || (resc%3 != 0) || (resl < 9) || (resl > 15) || (resc < 9) || (resc> 24))  //caso em que não são verificadas as condições corretas para criar o tabuleiro
     {
-        printf("*Erro! As dimensões do seu tabuleiro são invalidas. Tanto as linhas como as colunas tem de ser divisiveis por 3. Para alem disso a matriz minima e de 9x9 e a maxima e de 15x24. \n");
-        return (-1);
+        printf("*Erro! As dimensões do seu tabuleiro são invalidas.\n");
+        help();
     }
 
     for(linha = resl; linha >= 1; linha--)              //Meter o tabuleiro todo com '-'
@@ -999,6 +1105,10 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     time_t inicio = time(NULL);
     if (modoj == 0)
     {
+    if (mod == 1){
+    printf("*Não pode introduzir modo de disparo\n");
+    help();
+    }
         printf("%dx%d",resl,resc);
         modoposi(modop);
         for(linha = resl; linha >= 1; linha--)
@@ -1020,6 +1130,9 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
 
     else if (modoj == 1)
     {
+        if (mod == 1){
+        printf("*Não pode introduzir modo de disparo\n");
+        help();}
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
         modoposi(modop);
         conta_b=0;
@@ -1074,5 +1187,5 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
         mododis(inicio);
     }
-    return 0;
+    return -1;
 }
