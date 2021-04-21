@@ -540,9 +540,9 @@ int barco(int ref, int l, int j){      //Função que identifica todos os barcos
             camada(l-2, j, 8); camada(l-1, j, 8); camada(l, j, 8); camada(l-2, j+1, 8); camada(l, j+1, 8); camada(l-2, j+2, 8); camada(l-1, j+2, 8); camada(l, j+2, 8);
             return 8;}}
     //Fim peças 8
-}
-identificador--;
-return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
+    }
+    identificador--;
+    return 10;   //caso em que as peças não podem ser colocadas e portanto é retornado o valor 10 o que fará continuar a função while do modo_p1.
 }
 
 /** \brief Função que cria peças random para o modo_p1
@@ -726,10 +726,9 @@ int verificador(int id,int l,int j, int incre)
 }
 
 /** \brief
- *
+ * \param n_pecas int: Quantidade total de pecas desde o tipo 1 ao 8
  * \param
- * \param
- * \return
+ * \return void
  *
  */
 void modo_p2 (int n_pecas)
@@ -869,14 +868,14 @@ void modo_p2 (int n_pecas)
     }
 }
 
-/** \brief
+/** \brief Função que ajuda o jogador a saber que comandos utilizar para usar de forma correta o programa, quando invocada com o "-h" 
  *
+ * \param Nao recebe nenhuma variavel 
  * \param
- * \param
- * \return
+ * \return void
  *
  */
-void help ()      // Instrucoes do HELP caso seja chamado pelo identificador -h ou em caso de erro nas instrucoes
+void help ()
 {
     printf("\nMEEC War Game - Versao Intermedia\n-Last Update: 21/04/2021 \n");
     printf("Modo de uso:./wargame[argumento1] [argumento2] ... [argumentoN] -> Inicializa o jogo com as carateristicas definidas nos argumentos");
@@ -905,24 +904,24 @@ void help ()      // Instrucoes do HELP caso seja chamado pelo identificador -h 
     exit(-1);
 }
 
-/** \brief
+/** \brief Funcão que posiciona as pecas de varias formas, modo 1 e 2, este informacao e dada pelo utilizador
  *
- * \param modop int
+ * \param modop int: Informacao dada pelo jogador ao iniciar o programa quando coloca "-p" a 1 ou 2
  * \return void
  *
  */
-void modoposi(int modop)             // Modo de posicionamento em que recebe a isntrucao do jogador e o tipo de posicao escolhida
+void modoposi(int modop)             
 {
     int a;
     if (modop==1)       //  Modo de posicionamento 1
     {
-        int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
+        int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8]; //soma para saber o total de barcos em jogo
         if (n_pecas != 0)                                                   //erro por não inserir barcos
         {
             printf("\n*Nao pode meter a quantidade de pecas no modo p1!\n");
             help();
         }
-        modo_p1();
+        modo_p1(); 
         conta_pecas();
     }
 
@@ -949,13 +948,13 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
     printf("\n");
 }
 
-/** \brief
+/** \brief Funcao que mostra a informacao relativa ao modo de jogo 2, numero de tiros, tempo demorado e tabuleiro final
  *
- * \param inicio int
+ * \param inicio int:  
  * \return void
  *
  */
-void resultado(int inicio)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado
+void resultado(int inicio)
 {
     time_t fim = time(NULL);   // reset do cronometro
 
@@ -968,7 +967,7 @@ void resultado(int inicio)      // Retorno de informacao relativa ao modo de jog
 }
 
 
-/** \brief
+/** \brief Função que executa o modo de disparo (1,2 ou 3) escolhido pelo jogador ao iniciar o programa
  *
  * \param inicio int
  * \return void
@@ -1032,55 +1031,55 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             help();}
             mod = 1;
             break;
-        case '1':   //Peca 1
+        case '1':   // Numero de pecas 1
             sscanf(optarg, "%d", &pecas_num[1]);
             if(pecas_num[1] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '2':   //Peca 2
+        case '2':   // Numero de pecas 2
             sscanf(optarg, "%d", &pecas_num[2]);
             if(pecas_num[2] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '3':   //Peca 3
+        case '3':   // Numero de pecas 3
             sscanf(optarg, "%d", &pecas_num[3]);
             if(pecas_num[3] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '4':   //Peca 4
+        case '4':   // Numero de pecas 4
             sscanf(optarg, "%d", &pecas_num[4]);
             if(pecas_num[4] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '5':   //Peca 5
+        case '5':   // Numero de pecas 5
             sscanf(optarg, "%d", &pecas_num[5]);
             if(pecas_num[5] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '6':   //Peca 6
+        case '6':   // Numero de pecas 6
             sscanf(optarg, "%d", &pecas_num[6]);
             if(pecas_num[6] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '7':   //Peca 7
+        case '7':   // Numero de pecas 7
             sscanf(optarg, "%d", &pecas_num[7]);
             if(pecas_num[7] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case '8':   //Peca 8
+        case '8':   // Numero de pecas 8
             sscanf(optarg, "%d", &pecas_num[8]);
             if(pecas_num[8] < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        default:
+        default:    // Mostra a mensagem se for escrito um carater sem sentido no programa  
         {
             printf("*Carater %c nao identificado", optopt);
             help();
@@ -1094,7 +1093,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         help();
     }
 
-    for(linha = resl; linha >= 1; linha--)              //Meter o tabuleiro todo com '-'
+    for(linha = resl; linha >= 1; linha--)              // Preenche o tabuleiro com "-" 
     {
         for(coluna = 1; resc >= coluna; coluna++ )
         {
