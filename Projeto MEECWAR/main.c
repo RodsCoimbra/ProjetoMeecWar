@@ -1,4 +1,4 @@
-#include <stdio.h>  /*Bibliotecas utilizadas para que as funções precisas sejam bem utilizadas*/
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
@@ -87,20 +87,14 @@ void disparo()
         tiro++;                   //quantidade de tiros disparados
         do
         {
-            printf("\nTiro disparado em : %c%d",col,disp_l);
-            printf("\nEscreva o num. do barco se o pc acertou e escreva - se falhou:\n");
+            printf("%c%d\n",col,disp_l);
             condicao = 0;
             scanf(" %c", &tabuleiro[disp_l][disp_c]);
             if (tabuleiro[disp_l][disp_c] == '-')
             {
-                tabuleiro[disp_l][disp_c] = 'x';
-                tabu();
-                printf("\nAcertaste na \033[0;34magua\033[0;30m! Mais sorte no proximo tiro.\n");
             }
             else if(tabuleiro[disp_l][disp_c] >= ('1' + 0) && tabuleiro[disp_l][disp_c] <= ('8' + 0))
             {
-                tabu();
-                printf("\nAcertaste num \033[0;31mbarco %c\033[0;30m!\n", tabuleiro[disp_l][disp_c]);
                 if(id_peca[0] == 0)
                 {
                     id_peca[0] = (int)tabuleiro[disp_l][disp_c] - 48;
@@ -830,7 +824,7 @@ void help (char *help)      // Instrucoes do HELP caso seja chamado pelo identif
  */
 void modoposi(int modop)             // Modo de posicionamento em que recebe a isntrucao do jogador e o tipo de posicao escolhida
 {
-    int a,p;
+    int a;
     if (modop==1)       //  Modo de posicionamento 1
     {
         modo_p1();
@@ -856,19 +850,6 @@ void modoposi(int modop)             // Modo de posicionamento em que recebe a i
         printf("\n");
 }
 
-void criartabu()
-{
-    char letra = 'A';
-    int linha, coluna;
-    for(linha = resl; linha >= 1; linha--)
-    {
-        for(coluna = 1; resc >= coluna; coluna++ )
-        {
-            tabuleiro [linha][coluna] = '-';
-        }
-    }
-}
-
 void resultado(int inicio)      // Retorno de informacao relativa ao modo de jogo 2, numero de tiros e  tempo demorado
 {
     time_t fim = time(NULL);   // reset do cronometro
@@ -877,6 +858,7 @@ void resultado(int inicio)      // Retorno de informacao relativa ao modo de jog
     {
         modod = 0;
         printf("\nFim de Jogo: %d jogadas em %d segundos\n",tiro, (int )fim-inicio);
+        tabu();
     }
 }
 
@@ -887,13 +869,17 @@ void mododis(int inicio, int total)
     while (modod==1)
     {
         modo_d1();
-        resultado(inicio);              //RESOLVER A PARTE DE ISTO PASSAR À FRENTE
+        resultado(inicio);
+        if (conta_b >= total_b){
+            exit(-1);
+        }
     }
 
     if (modod==2 || modod == 3)
     {
         modo_d2_e_3();
         resultado(inicio);
+        exit(-1);
     }
 }
 
@@ -960,13 +946,20 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         return (-1);
     }
     total = resc * resl;
+
+    for(linha = resl; linha >= 1; linha--)              //Meter o tabuleiro todo com '-'
+    {
+        for(coluna = 1; resc >= coluna; coluna++ )
+        {
+            tabuleiro [linha][coluna] = '-';
+        }
+    }
+
     time_t inicio = time(NULL);
     if (modoj == 0)
     {
         printf("%dx%d",resl,resc);
-        criartabu();
         modoposi(modop);
-
         for(linha = resl; linha >= 1; linha--) {
             for(coluna = 1; resc >= coluna; coluna++ ) {
                 if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
@@ -983,13 +976,12 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
 
     else if (modoj == 1) {
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
-        criartabu();
         modoposi(modop);
-        for(linha = resl; linha >= 1; linha--) {
+        /*for(linha = resl; linha >= 1; linha--) {
             for(coluna = 1; resc >= coluna; coluna++ ) {
                 if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8){
                     tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';}}}
-        tabu();
+        tabu();*/
         conta_b=0;
         while (conta_b < total_b) {
             scanf(" %c%d", &col, &linha);
@@ -1011,7 +1003,6 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             }
         }
         resultado(inicio);
-        tabu();
         return 0;
     }
 
@@ -1029,8 +1020,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         {
             printf(" %d ", pecas_num[a]);
         }
-        printf("\n\n");
-        criartabu();
+        printf("\n");
         total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
         mododis(inicio, total);
     }
