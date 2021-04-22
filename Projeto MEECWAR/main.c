@@ -839,17 +839,17 @@ void modo_p2 (int n_pecas)
             incre = 1;
             identificador = 1;
             b_colocados = 0;
-            for(l = resl; l >= 1; l--) // coloca a terceira dimensao da camada 2 a 0's
+            for(l = resl; l >= 1; l--) // coloca a terceira dimensao da camada2 a 0's
             {
                 for(k = 1; resc >= k; k++)   
                 {
-                    camada2[l][k][0] = 0;
+                    camada2[l][k][0] = 0; 
                     camada2[l][k][1] = 0;
                 }
             }
             for (k = 0 ; k < 41; k++) // percorre o vetor cnum e coloca todas as posicoes a 0
             {
-                cnum[k] = 0;
+                cnum[k] = 0; // fica a 0 pois volta se ao tabuleiro inicia sem peças colocadas
             }
 
             for (k = 0 ; k < 41; k++) // percorre o vetor id_peca e coloca todas as posicoes a 0
@@ -914,12 +914,12 @@ void modoposi(int modop)
     if (modop==1)       //  Modo de posicionamento 1
     {
         int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8]; //soma para saber o total de barcos em jogo
-        if (n_pecas != 0)                                                   //erro por não inserir barcos
+        if (n_pecas != 0)                    //erro por não inserir barcos
         {
             printf("\n*Nao pode meter a quantidade de pecas no modo p1!\n");
             help();
         }
-        modo_p1();
+        modo_p1(); // de forma aleatoria escolhe a quantidade dos tipos das peças e coloca no tabuleiro
         conta_pecas();
     }
 
@@ -927,19 +927,19 @@ void modoposi(int modop)
     {
         float n_pecas_max=((resl*resc/9)/2);
         int n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-        if (n_pecas == 0)                                                   //erro por não inserir barcos
+        if (n_pecas == 0)    //erro por não inserir barcos
         {
             printf("\n*Tem de meter a quantidade de pecas no modo p2!\n");
             exit(-1);
         }
         if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
-        {
+        { // mensagem de erro pois ou tem demasiadas peças, ou porque tem mais peças do tipo anterior (por exemplo: peças1<peças2)
             printf("\n*Número de peças inválido!\n");
             exit (-1);
         }
-        modo_p2(n_pecas);
+        modo_p2(n_pecas); // recebendo o numero de peças dispõe-nas de forma aleatória no tabuleiro
     }
-    for(a=1; a < 9; a++)
+    for(a=1; a < 9; a++)  // dá a conhecer a quantidade de peças de cada tipo (de 1 a 8)
     {
         printf(" %d", pecas_num[a]);
     }
@@ -954,40 +954,40 @@ void modoposi(int modop)
  */
 void resultado(int inicio)
 {
-    time_t fim = time(NULL);   // reset do cronometro
+    time_t fim = time(NULL);   // valor final do cronometro 
 
     if (conta_b >= total_b)
     {
         modod = 0;
-        printf("\nFim de Jogo: %d jogadas em %d segundos\n",tiro, (int)fim-inicio);
-        tabu();
+        printf("\nFim de Jogo: %d jogadas em %d segundos\n",tiro, (int)fim-inicio); // fim-inicio= tempo de jogo
+        tabu(); //mostra o tabuleiro final
     }
 }
 
 
 /** \brief Função que executa o modo de disparo (1,2 ou 3) escolhido pelo jogador ao iniciar o programa
  *
- * \param inicio int: Valor do tempo que em que o jogo começa
+ * \param inicio int: Valor do tempo para com o valor de tempo final calcular o tempo de jogo
  * \return void
  *
  */
 void mododis(int inicio)
 {
 
-    while (modod==1)
+    while (modod==1) // Quando o modo escolhido é o 1 
     {
-        modo_d1();
-        resultado(inicio);
-        if (conta_b >= total_b)
+        modo_d1(); // invoca a função do modo de disparo 1
+        resultado(inicio); // mostra as estatisticas relativas ao jogo
+        if (conta_b >= total_b) // Quando todos os disparos foram feitos sai da função ?????????
         {
             exit(0);
         }
     }
 
-    if (modod==2 || modod == 3)
+    if (modod==2 || modod == 3) // Quando o modo escolhido é o 2 ou 3
     {
-        modo_d2_e_3();
-        resultado(inicio);
+        modo_d2_e_3(); // invoca a função do modo de disparo 2 e 3
+        resultado(inicio); // mostra as estatisticas relativas  ao jogo
         exit(0);
     }
 }
@@ -999,11 +999,11 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
     float n_pecas_max;
     char col;
     opterr = 0;
-    while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 )
+    while((opt= getopt(argc, argv,"t:j:p:d:1:2:3:4:5:6:7:8:h"))!= -1 ) // loop que recebe as informações do utilizador no incio do programa
     {
         switch (opt)
         {
-        case 't':
+        case 't':   // Receber matriz linhaXcoluna
             sscanf(optarg,"%dx%d", &resl, &resc);
             break;
         case 'h':   // Ajuda ao utilizador
@@ -1099,41 +1099,42 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         }
     }
 
-    time_t inicio = time(NULL);
-    if (modoj == 0)
+    time_t inicio = time(NULL); // coloca o inicio = um valor temporal passado fixo       ???????????????????????????????
+    if (modoj == 0) // modo de jogo 0
     {
-    if (mod == 1){
+    if (mod == 1){ // mensagem de erro relatio às regras do modo de jogo 
     printf("*Não pode introduzir modo de disparo\n");
     help();
     }
-        printf("%dx%d",resl,resc);
-        modoposi(modop);
-        for(linha = resl; linha >= 1; linha--)
+        printf("%dx%d",resl,resc); // mostra o tamanho da matriz
+        modoposi(modop); // invoca a funão de posicionamento 
+        for(linha = resl; linha >= 1; linha--) // percorre todas as coordenadas com os dois loops
         {
             for(coluna = 1; resc >= coluna; coluna++ )
             {
-                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8)
+                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // se em alguma coordenada existir o if corre
                 {
-                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
+                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0'; // traz as peças existentes no tabuleiro da camada2 para a camada1 para serem vistas
                 }
             }
         }
         printf("\n");
-        tabu();
+        tabu(); // mostra o tabuleiro
         return 0;
 
     }
 
 
-    else if (modoj == 1)
+    else if (modoj == 1) // modo de jogo 1
     {
-        if (mod == 1){
+        if (mod == 1){ // mensagem de erro devido a violar as regras do jogo
         printf("*Não pode introduzir modo de disparo\n");
-        help();}
+        help();
+        }
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
-        modoposi(modop);
+        modoposi(modop); // invoca a função de posicionamento para dispôr as peças
         conta_b=0;
-        while (conta_b < total_b)
+        while (conta_b < total_b) // enquanto 
         {
             scanf(" %c%d", &col, &linha);
             coluna = col-'@';
