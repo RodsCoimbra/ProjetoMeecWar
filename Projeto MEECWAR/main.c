@@ -1134,56 +1134,56 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         printf("* ================================\n* Modo de Jogo 1\n* Insira as Coordenadas de Disparo\n* ================================\n%dx%d",resl,resc);
         modoposi(modop); // invoca a função de posicionamento para dispôr as peças
         conta_b=0;
-        while (conta_b < total_b) // enquanto 
+        while (conta_b < total_b) // enquanto as coordenadas dos barcos nao foram todas disparadas o while corre
         {
-            scanf(" %c%d", &col, &linha);
-            coluna = col-'@';
-            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8)
+            scanf(" %c%d", &col, &linha); // recebe a coordenada
+            coluna = col-'@'; // transforma a letra da coluna em um numero a ler
+            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // se for uma peça corre
             {
-                tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0';
-                printf("%c\n", tabuleiro[linha][coluna]);
+                tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0'; // transfere os valores da camada2 para o tabuleiro
+                printf("%c\n", tabuleiro[linha][coluna]); // informa o barco onde acertou o disparo
                 conta_b++;
-                camada2[linha][coluna][0] = 12;
+                camada2[linha][coluna][0] = 12; // marcador, para saber que já foi disparado 
                 tiro++;
             }
-            else if(camada2[linha][coluna][0] == 12)
+            else if(camada2[linha][coluna][0] == 12) // mensagem de aviso pois a coordenada já foi disparada
             {
                 printf("*Já disparou aqui!!!\n");
             }
             else
             {
-                printf("-\n");
-                camada2[linha][coluna][0] = 12;
-                tiro++;
+                printf("-\n"); // informa que o disparo foi na água
+                camada2[linha][coluna][0] = 12; //marcador
+                tiro++; 
             }
         }
-        resultado(inicio);
+        resultado(inicio); // dá a conhecer o tempo demorado, quantidade de disparos e mostra o tabuleiro
         return 0;
     }
 
 
-    else if (modoj == 2)
+    else if (modoj == 2) // modo de jogo 2
     {
-        n_pecas_max=((resl*resc/9)/2);
+        n_pecas_max=((resl*resc/9)/2); // verificação se a quantidade de peças está correta
         n_pecas = pecas_num[1]+pecas_num[2]+pecas_num[3]+pecas_num[4]+pecas_num[5]+pecas_num[6]+pecas_num[7]+pecas_num[8];
-        if (n_pecas == 0)                                                   //erro por não inserir barcos
+        if (n_pecas == 0) //erro por não inserir barcos
         {
             printf("*Tem de meter a quantidade de pecas no modo j2!\n");
             return -1;
         }
         if ( n_pecas > n_pecas_max || pecas_num[1]< pecas_num[2] || pecas_num[2] < pecas_num[3] || pecas_num[3] < pecas_num[4] || pecas_num[4] < pecas_num[5] || pecas_num[5] < pecas_num[6] || pecas_num[6] < pecas_num[7] || pecas_num[7] < pecas_num[8])
-        {
+        { // erro porque o jogador colocou peças a mais no inicio do programa
             printf("*Número de peças inválido!\n");
             exit (-1);
         }
         printf("* ================================\n* Modo de Jogo 2\n* Crie um tabuleiro com as características indicadas\n* Responda aos disparos do programa\n* ================================\n%dx%d ",resl,resc);
-        for(a=1; a < 9; a++)
+        for(a=1; a < 9; a++) // mostra o número de peças de cada tipo
         {
             printf(" %d ", pecas_num[a]);
         }
         printf("\n");
         total_b = pecas_num[1]+2*pecas_num[2]+3*pecas_num[3]+4*pecas_num[4]+5*pecas_num[5]+6*pecas_num[6]+7*pecas_num[7]+8*pecas_num[8];
-        mododis(inicio);
+        mododis(inicio); // invoca a função de disparo
     }
     return -1;
 }
