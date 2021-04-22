@@ -978,7 +978,7 @@ void mododis(int inicio)
     {
         modo_d1(); // invoca a função do modo de disparo 1
         resultado(inicio); // mostra as estatisticas relativas ao jogo
-        if (conta_b >= total_b) // Quando todos os disparos foram feitos sai da função ?????????
+        if (conta_b >= total_b) // Quando todos os disparos foram feitos termina o programa
         {
             exit(0);
         }
@@ -987,7 +987,7 @@ void mododis(int inicio)
     if (modod==2 || modod == 3) // Quando o modo escolhido é o 2 ou 3
     {
         modo_d2_e_3(); // invoca a função do modo de disparo 2 e 3
-        resultado(inicio); // mostra as estatisticas relativas  ao jogo
+        resultado(inicio); // mostra as estatisticas relativas ao jogo
         exit(0);
     }
 }
@@ -1010,13 +1010,13 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             help();
             return 0;
             break;
-        case 'j': //modo de jogo
+        case 'j': // modo de jogo
             sscanf(optarg,"%d", &modoj);
             if(modoj > 2 || modoj < 0){
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        case 'p': // Posicionamneto
+        case 'p': // Posicionamento
             sscanf(optarg,"%d", &modop);
             if(modop > 2 || modop < 1){
             printf("*Erro na introdução de argumento.\n");
@@ -1077,7 +1077,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             printf("*Erro na introdução de argumento.\n");
             help();}
             break;
-        default:    // Mostra a mensagem se for escrito um carater sem sentido no programa
+        default:    // Mostra a mensagem se for escrito um caracter sem sentido no programa
         {
             printf("*Carater %c nao identificado", optopt);
             help();
@@ -1099,7 +1099,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         }
     }
 
-    time_t inicio = time(NULL); // coloca o inicio = um valor temporal passado fixo       ???????????????????????????????
+    time_t inicio = time(NULL); // valor inicial do cronómetro
     if (modoj == 0) // modo de jogo 0
     {
     if (mod == 1){ // mensagem de erro relatio às regras do modo de jogo 
@@ -1112,9 +1112,9 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         {
             for(coluna = 1; resc >= coluna; coluna++ )
             {
-                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // se em alguma coordenada existir o if corre
+                if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // se houver um barco nas coordenadas
                 {
-                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0'; // traz as peças existentes no tabuleiro da camada2 para a camada1 para serem vistas
+                    tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0'; // traz as peças existentes no tabuleiro da camada2 para o tabuleiro para serem vistas
                 }
             }
         }
@@ -1138,7 +1138,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         {
             scanf(" %c%d", &col, &linha); // recebe a coordenada
             coluna = col-'@'; // transforma a letra da coluna em um numero a ler
-            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // se for uma peça corre
+            if (camada2[linha][coluna][0] >= 1 && camada2[linha][coluna][0] <= 8) // caso haja uma peça
             {
                 tabuleiro[linha][coluna] = camada2[linha][coluna][0] + '0'; // transfere os valores da camada2 para o tabuleiro
                 printf("%c\n", tabuleiro[linha][coluna]); // informa o barco onde acertou o disparo
@@ -1153,7 +1153,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             else
             {
                 printf("-\n"); // informa que o disparo foi na água
-                camada2[linha][coluna][0] = 12; //marcador
+                camada2[linha][coluna][0] = 12; // marcador para saber que já foi disparado
                 tiro++; 
             }
         }
