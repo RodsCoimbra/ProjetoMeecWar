@@ -721,7 +721,7 @@ int verificador(int id,int l,int j, int incre)
         }
     }
 
-    return 2;                           //Retorna 2 caso não consiga meter nenhuma das variantes daquela peça
+    return 2;           //Retorna 2 caso não consiga meter nenhuma das variantes daquela peça
 }
 
 
@@ -733,18 +733,18 @@ int verificador(int id,int l,int j, int incre)
  */
 void modo_p2 (int n_pecas)
 {
-    int i=0,l,j, k,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0};      //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
+    int i=0,l,j, k,num = 2, pecas[21] = {},veri1 = 0, veri2 = 0, stop, incre=1, rnum, cnum[41] = {0}; //variáveis para o ciclo for que servem respetivamente de linha e coluna para a coordenada de posicionamento e peca que contera o numero de barcos e a matriz 0 (tamanho de 21 pois o maximo de barcos que se pode ter num tabuleiro 15x24 e 20 e o ultimo e para o valor 0)
     static int  b_colocados = 0;
-    pecas[0] = 0;
-    pecas[1] = 0;
-    srand(time(NULL));          //seed para o random
-    for(j = 0; j < pecas_num[1]; j++)
-    {
-        pecas[num] = 1;
-        num++;
+    pecas[0] = 0;  // estes dois espacos estao reservados para 0 para aumentar a probabilidade de sair matriz nula no random 
+    pecas[1] = 0;  
+    srand(time(NULL));          //seed para o random 
+    for(j = 0; j < pecas_num[1]; j++)      // Este conjunto de for's coloca as pecas do jogo escolhidas num array
+    {   
+        pecas[num] = 1; // coloca o numero 1 referente ao tipo da peca na posicao "num" do array 
+        num++;          // contador para ir avancando no array
     }
-    for(j = 0; j < pecas_num[2]; j++)
-    {
+    for(j = 0; j < pecas_num[2]; j++)      // o resto da linha de for's continua com o mesmo principio do primeiro mas para o resto das pecas
+     {
         pecas[num] = 2;
         num++;
     }
@@ -778,28 +778,28 @@ void modo_p2 (int n_pecas)
         pecas[num] = 8;
         num++;
     }
-    rnum = num;
+    rnum = num; // passa para rnum a quantidade de pecas preenchidas no array
     num = 0;
     while (n_pecas > b_colocados && veri2 != 1000)      //verificacao 1000x se e possivel colocar, se este nao conseguir depois das 1000x deiste e retorna Erro
     {
-        for (l=resl; l >= 1; l-=3)
+        for (l=resl; l >= 1; l-=3)  // for que percorre as matrizes do tabuleiro na vertical, isto de 3 em 3 linhas
         {
-            if (veri1 == 8 || n_pecas == b_colocados)
+            if (veri1 == 8 || n_pecas == b_colocados) // se todas as matrizes foram verificadas ou se todas as pecas forem colocadas ele para a funcao
             {
                 break;
             }
-            for(j= 1; j < resc; j+=3)
+            for(j= 1; j < resc; j+=3) // for que percorre as matrizes do tabuleiro na horizontal, isto e de 3 em 3 colunas  
             {
-                do
+                do  // loop que corre até tentar colocar a peca ou para se falhar 8x
                 {
-                    stop = 0;
+                    stop = 0; 
                     veri1++;
                     do
                     {
-                        num = rand() % rnum;
-                        for (k = 0 ; k < 41 ; k++)
+                        num = rand() % rnum;  // gera um numero aleatorio até um certo valor "rnum"
+                        for (k = 0 ; k < 41 ; k++) // for que nao deixa a repeticao de pecas
                         {
-                            if (num == cnum[k] && num != 0 && num != 1)
+                            if (num == cnum[k] && num != 0 && num != 1) // num= 0 ou 1 representa a matriz nula que pode repetir no tabuleiro
                             {
                                 i = 0;
                                 break;
@@ -809,29 +809,29 @@ void modo_p2 (int n_pecas)
                                 i = 1;
                             }
                         }
-                        cnum[incre] = num;
+                        cnum[incre] = num; // guarda os valores das pecas ja usadas
                     }
                     while(i == 0);
-                    stop = verificador(pecas[num],l,j,incre);
+                    stop = verificador(pecas[num],l,j,incre);  // coloca 0 ou 1 dependendo se a pocicao da peca esta disponivel
                 }
-                while(stop == 2 && veri1 != 8);
-                if (stop == 0)
+                while(stop == 2 && veri1 != 8);   
+                if (stop == 0)                   // 0 = nao se pode colocar a peca na matriz           
                 {
                     veri1 = 0;
                 }
-                else if (stop == 1)
+                else if (stop == 1) // 1 = a matriz esta livre pode se colocar a peca
                 {
-                    b_colocados++;
+                    b_colocados++; //peca colocada
                     veri1 = 0;
                 }
                 incre++;
-                if (veri1 == 8 || n_pecas == b_colocados)
+                if (veri1 == 8 || n_pecas == b_colocados)  // se todas as pecas forem colocadas a funcao para 
                 {
                     break;
                 }
             }
         }
-        if (n_pecas > b_colocados)
+        if (n_pecas > b_colocados) // enquanto as pecas todas nao foram colocadas este if corre
         {
             veri1 = 0;
             veri2++;
@@ -839,20 +839,20 @@ void modo_p2 (int n_pecas)
             incre = 1;
             identificador = 1;
             b_colocados = 0;
-            for(l = resl; l >= 1; l--)
+            for(l = resl; l >= 1; l--) // coloca a terceira dimensao da camada 2 a 0's
             {
-                for(k = 1; resc >= k; k++)
+                for(k = 1; resc >= k; k++)   
                 {
                     camada2[l][k][0] = 0;
                     camada2[l][k][1] = 0;
                 }
             }
-            for (k = 0 ; k < 41; k++)
+            for (k = 0 ; k < 41; k++) // percorre o vetor cnum e coloca todas as posicoes a 0
             {
                 cnum[k] = 0;
             }
 
-            for (k = 0 ; k < 41; k++)
+            for (k = 0 ; k < 41; k++) // percorre o vetor id_peca e coloca todas as posicoes a 0
             {
                 id_peca[k] = 0;
             }
@@ -1008,7 +1008,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             break;
         case 'h':   // Ajuda ao utilizador
             help();
-            return 0;  //acho que não é necessário
+            return 0;
             break;
         case 'j': //modo de jogo
             sscanf(optarg,"%d", &modoj);
